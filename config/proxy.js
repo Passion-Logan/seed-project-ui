@@ -8,10 +8,11 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      // target: 'https://preview.pro.ant.design',
+      target: 'http://192.168.3.153:8080/',
       changeOrigin: true,
       pathRewrite: {
-        '^': '',
+        '^/api': '/seed-project',
       },
     },
   },
