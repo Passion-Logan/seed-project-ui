@@ -26,7 +26,7 @@ const codeMessage = {
  * 异常处理程序
  */
 
-const errorHandler = error => {
+const errorHandler = (error) => {
   const { response } = error;
 
   if (response && response.status) {
@@ -45,13 +45,27 @@ const errorHandler = error => {
 
   return response;
 };
+
 /**
  * 配置request请求时的默认参数
  */
-
 const request = extend({
   errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
+
+// response 拦截器，处理respons
+request.interceptors.response.use(async (response) => {
+  const data = await response.clone().json();
+
+  if (data.code !== 200) {
+    notification.error({
+      message: data.message,
+    });
+  }
+
+  return data;
+});
+
 export default request;
