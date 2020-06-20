@@ -28,6 +28,9 @@ const LoginItem = (props) => {
   const [count, setCount] = useState(props.countDown || 0);
   const [timing, setTiming] = useState(false); // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
   const [imgData, setImgData] = useState();
+  const [imgUUID, setImgUUID] = useState();
+
+  const [myUseForm] = Form.useForm();
 
   const {
     onChange,
@@ -59,9 +62,17 @@ const LoginItem = (props) => {
 
     if (result.code !== 200) {
       message.success('获取验证码失败！');
+      return;
     }
 
+    myUseForm.setFieldsValue({
+      uuid: result.result.uuid,
+    });
+
+    console.log('uuid', myUseForm.getFieldValue('uuid'));
+
     setImgData(result.result.img);
+    setImgUUID(result.result.uuid);
   }, []);
 
   useEffect(() => {
@@ -86,6 +97,13 @@ const LoginItem = (props) => {
     return () => clearInterval(interval);
   }, [timing]);
 
+  // useEffect(() => {
+  //   myUseForm.setFieldsValue({
+  //     uuid: imgUUID,
+  //   });
+  //   console.log('uuid', myUseForm.getFieldValue('uuid'));
+  // }, [imgUUID]);
+
   if (!name) {
     return null;
   } // get getFieldDecorator props
@@ -105,13 +123,19 @@ const LoginItem = (props) => {
             </Col>
             <Col span={8}>
               <img
-                src={imgData}
+                src={imgData === undefined ? onGetVerification() : imgData}
                 style={{ width: '116px', height: '40px', display: 'block' }}
                 alt="验证码"
                 onClick={() => {
                   onGetVerification();
                 }}
               />
+            </Col>
+            <Col span={16}>
+              <Input value={imgUUID} />
+              <FormItem name="uuid">
+                <Input />
+              </FormItem>
             </Col>
           </Row>
         )}
