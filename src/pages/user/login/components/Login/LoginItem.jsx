@@ -28,9 +28,6 @@ const LoginItem = (props) => {
   const [count, setCount] = useState(props.countDown || 0);
   const [timing, setTiming] = useState(false); // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
   const [imgData, setImgData] = useState();
-  const [imgUUID, setImgUUID] = useState();
-
-  const [myUseForm] = Form.useForm();
 
   const {
     onChange,
@@ -57,7 +54,7 @@ const LoginItem = (props) => {
     setTiming(true);
   }, []);
 
-  const onGetVerification = useCallback(async () => {
+  const onGetVerification = useCallback(async (form) => {
     const result = await getCaptcha();
 
     if (result.code !== 200) {
@@ -65,14 +62,11 @@ const LoginItem = (props) => {
       return;
     }
 
-    myUseForm.setFieldsValue({
-      uuid: result.result.uuid,
-    });
-
-    console.log('uuid', myUseForm.getFieldValue('uuid'));
-
     setImgData(result.result.img);
-    setImgUUID(result.result.uuid);
+
+    if (form) {
+      form.setFieldsValue({ uuid: result.result.uuid });
+    }
   }, []);
 
   useEffect(() => {
@@ -97,13 +91,6 @@ const LoginItem = (props) => {
     return () => clearInterval(interval);
   }, [timing]);
 
-  // useEffect(() => {
-  //   myUseForm.setFieldsValue({
-  //     uuid: imgUUID,
-  //   });
-  //   console.log('uuid', myUseForm.getFieldValue('uuid'));
-  // }, [imgUUID]);
-
   if (!name) {
     return null;
   } // get getFieldDecorator props
@@ -113,33 +100,32 @@ const LoginItem = (props) => {
 
   if (type === 'ImgCode') {
     return (
-      <FormItem shouldUpdate noStyle>
-        {() => (
-          <Row gutter={8}>
-            <Col span={16}>
-              <FormItem name={name} {...options}>
-                <Input {...customProps} />
-              </FormItem>
-            </Col>
-            <Col span={8}>
-              <img
-                src={imgData === undefined ? onGetVerification() : imgData}
-                style={{ width: '116px', height: '40px', display: 'block' }}
-                alt="验证码"
-                onClick={() => {
-                  onGetVerification();
-                }}
-              />
-            </Col>
-            <Col span={16}>
-              <Input value={imgUUID} />
-              <FormItem name="uuid">
-                <Input />
-              </FormItem>
-            </Col>
-          </Row>
-        )}
-      </FormItem>
+      <div>
+        <FormItem shouldUpdate noStyle>
+          {(form) => (
+            <Row gutter={8}>
+              <Col span={16}>
+                <FormItem name={name} {...options}>
+                  <Input {...customProps} />
+                </FormItem>
+              </Col>
+              <Col span={8}>
+                <img
+                  src={imgData === undefined ? onGetVerification(form) : imgData}
+                  style={{ width: '116px', height: '40px', display: 'block' }}
+                  alt="验证码"
+                  onClick={() => {
+                    onGetVerification(form);
+                  }}
+                />
+              </Col>
+            </Row>
+          )}
+        </FormItem>
+        <FormItem name="uuid" hidden>
+          <Input />
+        </FormItem>
+      </div>
     );
   }
 
