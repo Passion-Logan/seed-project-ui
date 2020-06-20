@@ -1,4 +1,10 @@
-import { LockTwoTone, MailTwoTone, MobileTwoTone, UserOutlined } from '@ant-design/icons';
+import {
+  LockTwoTone,
+  MailTwoTone,
+  MobileTwoTone,
+  UserOutlined,
+  InsuranceOutlined,
+} from '@ant-design/icons';
 import React from 'react';
 import styles from './index.less';
 
@@ -36,6 +42,27 @@ export default {
       {
         required: true,
         message: 'Please enter password!',
+      },
+    ],
+  },
+  ImgCode: {
+    props: {
+      size: 'large',
+      id: 'verification',
+      prefix: (
+        <InsuranceOutlined
+          style={{
+            color: '#1890ff',
+          }}
+          className={styles.prefixIcon}
+        />
+      ),
+      placeholder: '请输入验证码',
+    },
+    rules: [
+      {
+        required: true,
+        message: 'Please enter verification!',
       },
     ],
   },
