@@ -28,6 +28,36 @@ const codeMessage = {
 
 const errorHandler = (error) => {
   const { response } = error;
+  // const errorText = codeMessage[response.status] || response.statusText;
+  // const { status, url } = response;
+
+  // if (status === 401) {
+  //   notification.error({
+  //     message: '未登录或登录已过期，请重新登录。',
+  //   });
+  //   // @HACK
+  //   /* eslint-disable no-underscore-dangle */
+  //   window.g_app._store.dispatch({
+  //     type: 'user/login',
+  //   });
+  //   return;
+  // }
+  // notification.error({
+  //   message: `请求错误 ${status}: ${url}`,
+  //   description: errorText,
+  // });
+  // // environment should not be used
+  // if (status === 403) {
+  //   // router.push('/exception/403');
+  //   return;
+  // }
+  // if (status <= 504 && status >= 500) {
+  //   // router.push('/exception/500');
+  //   return;
+  // }
+  // if (status >= 404 && status < 422) {
+  //   // router.push('/exception/404');
+  // }
 
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
@@ -55,17 +85,35 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
+// request.interceptors.request.use(async (url, options) => {
+//   const token = localStorage.getItem('zone-token');
+//   const headers = {
+//     'Content-Type': 'application/json',
+//     // 'Content-Type': 'application/x-www-form-urlencoded',
+//     Accept: 'application/json',
+//   };
+
+//   if (token) {
+//     headers.token = token;
+//   }
+
+//   return {
+//     url,
+//     options: { ...options, headers },
+//   };
+// });
+
 // response 拦截器，处理respons
-request.interceptors.response.use(async (response) => {
-  const data = await response.clone().json();
+// request.interceptors.response.use(async (response) => {
+//   const data = await response.clone().json();
 
-  if (data.code !== 200) {
-    notification.error({
-      message: data.message,
-    });
-  }
+//   if (data.code !== 200) {
+//     notification.error({
+//       message: data.message,
+//     });
+//   }
 
-  return data;
-});
+//   return data;
+// });
 
 export default request;
