@@ -60,8 +60,6 @@ const errorHandler = (error) => {
   //   // router.push('/exception/404');
   // }
 
-
-
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -111,10 +109,10 @@ request.interceptors.request.use(async (url, options) => {
 request.interceptors.response.use(async (response) => {
   const data = await response.clone().json();
 
-  if (response.status>400) {
-      notification.error({
-        message: data.message,
-      });
+  if (response.status > 400) {
+    notification.error({
+      message: data.message,
+    });
   }
 
   return data;
