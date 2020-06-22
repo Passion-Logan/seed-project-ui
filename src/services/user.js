@@ -9,3 +9,11 @@ export async function queryCurrent() {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+export async function getUserNav() {
+  return request('/api/auth/user/nav');
+}
+
+export async function getUserInfo() {
+  return request('/api/auth/user/info');
+}

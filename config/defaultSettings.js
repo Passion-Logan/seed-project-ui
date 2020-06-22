@@ -10,7 +10,7 @@ const proSettings = {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'Seed Project',
   pwa: false,
   iconfontUrl: '',
 };

@@ -1,4 +1,5 @@
-import { queryCurrent, query as queryUsers } from '@/services/user';
+// import { queryCurrent, query as queryUsers, getUserNav, getUserInfo } from '@/services/user';
+import { query as queryUsers, getUserNav, getUserInfo } from '@/services/user';
 
 const UserModel = {
   namespace: 'user',
@@ -14,16 +15,40 @@ const UserModel = {
       });
     },
 
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    // *fetchCurrent(_, { call, put }) {
+    //   const response = yield call(queryCurrent);
+    //   yield put({
+    //     type: 'saveCurrentUser',
+    //     payload: response,
+    //   });
+    // },
+
+    *fetchUserNav(_, { call, put }) {
+      const response = yield call(getUserNav);
       yield put({
-        type: 'saveCurrentUser',
+        type: 'getUserNav',
+        payload: response,
+      });
+    },
+
+    *fetchUserInfo(_, { call, put }) {
+      const response = yield call(getUserInfo);
+      yield put({
+        type: 'getUserInfo',
         payload: response,
       });
     },
   },
   reducers: {
-    saveCurrentUser(state, action) {
+    // saveCurrentUser(state, action) {
+    //   return { ...state, currentUser: action.payload || {} };
+    // },
+
+    fetchUserNav(state) {
+      return { ...state };
+    },
+
+    getUserInfo(state, action) {
       return { ...state, currentUser: action.payload || {} };
     },
 

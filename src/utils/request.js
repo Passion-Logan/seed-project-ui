@@ -108,16 +108,16 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 // response 拦截器，处理respons
-// request.interceptors.response.use(async (response) => {
-//   const data = await response.clone().json();
+request.interceptors.response.use(async (response) => {
+  const data = await response.clone().json();
 
-//   if (data.code !== 200) {
-//     notification.error({
-//       message: data.message,
-//     });
-//   }
+  if (response.status>400) {
+      notification.error({
+        message: data.message,
+      });
+  }
 
-//   return data;
-// });
+  return data;
+});
 
 export default request;

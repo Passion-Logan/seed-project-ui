@@ -46,7 +46,7 @@ export default () => (
       </Typography.Text>
       <CodePreview> npm run fetch:blocks</CodePreview>
     </Card>
-    <p
+    {/* <p
       style={{
         textAlign: 'center',
         marginTop: 24,
@@ -57,6 +57,6 @@ export default () => (
         use block
       </a>
       。
-    </p>
+    </p> */}
   </PageHeaderWrapper>
 );
