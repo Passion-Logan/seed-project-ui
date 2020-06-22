@@ -4,6 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import { getToken } from '@/utils/token';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -59,6 +60,8 @@ const errorHandler = (error) => {
   //   // router.push('/exception/404');
   // }
 
+
+
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -85,23 +88,24 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
-// request.interceptors.request.use(async (url, options) => {
-//   const token = localStorage.getItem('zone-token');
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     // 'Content-Type': 'application/x-www-form-urlencoded',
-//     Accept: 'application/json',
-//   };
+request.interceptors.request.use(async (url, options) => {
+  const token = getToken();
 
-//   if (token) {
-//     headers.token = token;
-//   }
+  const headers = {
+    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/x-www-form-urlencoded',
+    Accept: 'application/json',
+  };
 
-//   return {
-//     url,
-//     options: { ...options, headers },
-//   };
-// });
+  if (token) {
+    headers.token = token;
+  }
+
+  return {
+    url,
+    options: { ...options, headers },
+  };
+});
 
 // response 拦截器，处理respons
 // request.interceptors.response.use(async (response) => {

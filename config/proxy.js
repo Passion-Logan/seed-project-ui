@@ -13,6 +13,7 @@ export default {
       changeOrigin: true,
       pathRewrite: {
         '^/api': '/seed-project',
+        // '^': '',
       },
     },
   },
