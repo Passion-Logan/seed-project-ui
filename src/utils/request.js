@@ -106,6 +106,7 @@ request.interceptors.request.use(async (url, options) => {
 request.interceptors.response.use(async (response) => {
   const data = await response.clone().json();
 
+<<<<<<< HEAD
   if (data.code !== 200 && data.code !== undefined) {
     if (data.code === 401) {
       clearToken();
@@ -117,6 +118,9 @@ request.interceptors.response.use(async (response) => {
       return <Redirect to="/user/login" />;
     }
     notification.destroy()
+=======
+  if (response.status > 400) {
+>>>>>>> 14531b01186328dd73b03bca56b73f33bce1fd30
     notification.error({
       message: data.message,
     });
