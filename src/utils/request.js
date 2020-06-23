@@ -3,8 +3,9 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
+import { Redirect } from 'umi';
 import { notification } from 'antd';
-import { getToken } from '@/utils/token';
+import { getToken, clearToken } from '@/utils/token';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -30,18 +31,14 @@ const codeMessage = {
 const errorHandler = (error) => {
   const { response } = error;
   // const errorText = codeMessage[response.status] || response.statusText;
-  // const { status, url } = response;
+  // const { status, url, data } = response;
 
   // if (status === 401) {
   //   notification.error({
   //     message: '未登录或登录已过期，请重新登录。',
   //   });
-  //   // @HACK
-  //   /* eslint-disable no-underscore-dangle */
-  //   window.g_app._store.dispatch({
-  //     type: 'user/login',
-  //   });
-  //   return;
+  //   clearToken();
+  //   return <Redirect to="/user/login" />;
   // }
   // notification.error({
   //   message: `请求错误 ${status}: ${url}`,
@@ -59,8 +56,6 @@ const errorHandler = (error) => {
   // if (status >= 404 && status < 422) {
   //   // router.push('/exception/404');
   // }
-
-
 
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
@@ -83,7 +78,7 @@ const errorHandler = (error) => {
  * 配置request请求时的默认参数
  */
 const request = extend({
-  errorHandler,
+  // errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
@@ -111,10 +106,20 @@ request.interceptors.request.use(async (url, options) => {
 request.interceptors.response.use(async (response) => {
   const data = await response.clone().json();
 
-  if (response.status>400) {
+  if (data.code !== 200 && data.code !== undefined) {
+    if (data.code === 401) {
+      clearToken();
+      notification.destroy()
       notification.error({
         message: data.message,
       });
+      // eslint-disable-next-line react/react-in-jsx-scope
+      return <Redirect to="/user/login" />;
+    }
+    notification.destroy()
+    notification.error({
+      message: data.message,
+    });
   }
 
   return data;
