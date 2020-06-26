@@ -80,7 +80,6 @@ export default defineConfig({
               name: 'test',
               icon: 'smile',
               path: '/test',
-              component: './test',
               routes: [
                 {
                   path: '/test/sub-test',
@@ -94,13 +93,26 @@ export default defineConfig({
               name: 'system',
               icon: 'SettingOutlined',
               path: '/system',
-              component: './system',
               routes: [
+                {
+                  path: '/system/user',
+                  name: 'system-user',
+                  component: './system/user',
+                },
                 {
                   path: '/system/role',
                   name: 'system-role',
-                  // icon: 'smile',
                   component: './system/role',
+                },
+                {
+                  path: '/system/menu',
+                  name: 'system-menu',
+                  component: './system/menu',
+                },
+                {
+                  path: '/system/globle',
+                  name: 'system-globle',
+                  component: './system/globle',
                 },
               ],
             },

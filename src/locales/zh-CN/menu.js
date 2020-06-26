@@ -54,4 +54,7 @@ export default {
   'menu.test.sub-test': '测试子页面',
   'menu.system': '系统管理',
   'menu.system.system-role': '角色管理',
+  'menu.system.system-user': '用户管理',
+  'menu.system.system-menu': '菜单管理',
+  'menu.system.system-globle': '系统设置',
 };

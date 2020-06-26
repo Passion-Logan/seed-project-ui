@@ -12,7 +12,7 @@ export default () => {
   }, []);
   return (
     <PageHeaderWrapper
-      content="这是一个角色管理页面，从这里进行开子页面发！"
+      content="这是一个菜单管理页面，从这里进行开子页面发！"
       className={styles.main}
     >
       <div
