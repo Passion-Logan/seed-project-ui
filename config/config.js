@@ -91,6 +91,20 @@ export default defineConfig({
               ],
             },
             {
+              name: 'system',
+              icon: 'SettingOutlined',
+              path: '/system',
+              component: './system',
+              routes: [
+                {
+                  path: '/system/role',
+                  name: 'system-role',
+                  // icon: 'smile',
+                  component: './system/role',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],

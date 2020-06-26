@@ -52,4 +52,6 @@ export default {
   // 添加按钮中文
   'menu.test': '测试页面',
   'menu.test.sub-test': '测试子页面',
+  'menu.system': '系统管理',
+  'menu.system.system-role': '角色管理',
 };
