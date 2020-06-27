@@ -74,7 +74,6 @@ const User = () => {
             配置
           </a>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
         </>
       ),
     },
