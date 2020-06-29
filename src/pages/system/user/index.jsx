@@ -4,6 +4,7 @@ import { Spin, Button, Dropdown, Menu, Divider } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
+import { queryUser } from './service';
 
 const User = () => {
   const [loading, setLoading] = useState(true);
@@ -80,10 +81,7 @@ const User = () => {
   ];
 
   return (
-    <PageHeaderWrapper
-      content="这是一个用户管理页面，从这里进行开子页面发！"
-      className={styles.main}
-    >
+    <PageHeaderWrapper className={styles.main}>
       <ProTable
         headerTitle="查询表格"
         // 获取表格数据
@@ -116,6 +114,7 @@ const User = () => {
             </Dropdown>
           ),
         ]}
+        request={(params, sorter, filter) => queryUser({ ...params })}
         columns={columns}
         rowSelection={{}}
       />
