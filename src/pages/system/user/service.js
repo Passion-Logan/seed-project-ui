@@ -2,7 +2,8 @@ import request from '@/utils/request';
 
 export async function queryUser(params) {
   return request('/api/sys/user/getPageList', {
-    params,
+    method: 'POST',
+    data: { ...params },
   });
 }
 export async function removeRule(params) {

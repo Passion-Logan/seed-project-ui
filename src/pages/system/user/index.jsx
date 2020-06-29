@@ -114,7 +114,7 @@ const User = () => {
             </Dropdown>
           ),
         ]}
-        request={(params, sorter, filter) => queryUser({ ...params })}
+        request={(params, sorter, filter) => queryUser({ ...params, sorter, filter })}
         columns={columns}
         rowSelection={{}}
       />
