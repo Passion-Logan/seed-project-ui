@@ -7,12 +7,12 @@ import styles from './index.less';
 import { queryUser } from './service';
 
 const User = () => {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  }, []);
+  // const [loading, setLoading] = useState(true);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 3000);
+  // }, []);
   const actionRef = useRef();
   const columns = [
     {
@@ -119,14 +119,14 @@ const User = () => {
         rowSelection={{}}
       />
 
-      <div
+      {/* <div
         style={{
           paddingTop: 100,
           textAlign: 'center',
         }}
       >
         <Spin spinning={loading} size="large" />
-      </div>
+      </div> */}
     </PageHeaderWrapper>
   );
 };

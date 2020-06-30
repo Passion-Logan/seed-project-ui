@@ -62,10 +62,10 @@ const LoginItem = (props) => {
       return;
     }
 
-    setImgData(result.result.img);
+    setImgData(result.data.img);
 
     if (form) {
-      form.setFieldsValue({ uuid: result.result.uuid });
+      form.setFieldsValue({ uuid: result.data.uuid });
     }
   }, []);
 
