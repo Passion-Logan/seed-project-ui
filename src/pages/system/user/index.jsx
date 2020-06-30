@@ -1,27 +1,60 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { Spin, Button, Dropdown, Menu, Divider } from 'antd';
+import { Spin, Button, Dropdown, Menu, Divider, message } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
-import { queryUser } from './service';
+import { queryUser, addUser } from './service';
+import CreateForm from './components/CreateForm';
+
+// 添加用户
+const handleAdd = async (fields) => {
+  const hide = message.loading('正在添加');
+
+  try {
+    await addUser({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('添加失败请重试!');
+    return false;
+  }
+};
 
 const User = () => {
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 3000);
-  // }, []);
+  const [createModalVisible, handleModalVisible] = useState(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
-      title: '用户账号',
+      title: '账号',
       dataIndex: 'userName',
+      hideInSearch: true,
+      rules: [
+        {
+          required: true,
+          message: '账号为必填项',
+        },
+      ],
     },
     {
       title: '昵称',
       dataIndex: 'nickName',
+    },
+    {
+      title: '密码',
+      dataIndex: 'password',
+      hideInSearch: true,
+      hideInTable: true,
+      rules: [
+        {
+          required: true,
+          message: '密码为必填项',
+        },
+      ],
     },
     {
       title: '性别',
@@ -38,16 +71,18 @@ const User = () => {
     {
       title: '邮箱',
       dataIndex: 'email',
+      hideInSearch: true,
     },
     {
       title: '状态',
       dataIndex: 'enabled',
       hideInForm: true,
+      hideInSearch: true,
       valueEnum: {
-        0: {
+        false: {
           text: '禁用',
         },
-        1: {
+        true: {
           text: '正常',
         },
       },
@@ -55,10 +90,14 @@ const User = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      hideInSearch: true,
+      hideInForm: true,
     },
     {
       title: '创建人',
       dataIndex: 'createBy',
+      hideInSearch: true,
+      hideInForm: true,
     },
     {
       title: '操作',
@@ -68,11 +107,11 @@ const User = () => {
         <>
           <a
             onClick={() => {
-              // handleUpdateModalVisible(true);
-              // setStepFormValues(record);
+              handleUpdateModalVisible(true);
+              setStepFormValues(record);
             }}
           >
-            配置
+            编辑
           </a>
           <Divider type="vertical" />
         </>
@@ -86,32 +125,21 @@ const User = () => {
         headerTitle="查询表格"
         // 获取表格数据
         actionRef={actionRef}
-        rowKey="key"
-        toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary">
+        rowKey={(row) => row.id}
+        toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
+          <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
-            <Dropdown
-              overlay={
-                <Menu
-                  onClick={async (e) => {
-                    if (e.key === 'remove') {
-                      // 删除节点
-                      // await
-                      action.reload();
-                    }
-                  }}
-                  selectedKeys={[]}
-                >
-                  <Menu.Item key="remove">批量删除</Menu.Item>
-                </Menu>
-              }
+            <Button
+              key="remove"
+              onClick={() => {
+                window.alert(selectedRowKeys.join('-'));
+                action.reload();
+              }}
             >
-              <Button>
-                批量操作 <DownOutlined />
-              </Button>
-            </Dropdown>
+              批量删除
+            </Button>
           ),
         ]}
         request={(params, sorter, filter) => queryUser({ ...params, sorter, filter })}
@@ -119,14 +147,25 @@ const User = () => {
         rowSelection={{}}
       />
 
-      {/* <div
-        style={{
-          paddingTop: 100,
-          textAlign: 'center',
-        }}
-      >
-        <Spin spinning={loading} size="large" />
-      </div> */}
+      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
+        <ProTable
+          onSubmit={async (value) => {
+            const success = await handleAdd(value);
+
+            if (success) {
+              handleModalVisible(false);
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          rowKey="key"
+          type="form"
+          columns={columns}
+          rowSelection={{}}
+        />
+      </CreateForm>
     </PageHeaderWrapper>
   );
 };
