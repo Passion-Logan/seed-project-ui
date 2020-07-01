@@ -166,6 +166,12 @@ const User = () => {
           rowSelection={{}}
         />
       </CreateForm>
+
+      {stepFormValues && Object.keys(stepFormValues).length ? (
+        <UpdateForm>
+          
+        </UpdateForm>
+      )}
     </PageHeaderWrapper>
   );
 };
