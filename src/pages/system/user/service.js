@@ -6,21 +6,21 @@ export async function queryUser(params) {
     data: { ...params },
   });
 }
-export async function removeRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
+export async function removeUser(params) {
+  return request('/api/sys/user/removeUser', {
+    method: 'DELETE',
     data: { ...params, method: 'delete' },
   });
 }
-export async function addRule(params) {
-  return request('/api/rule', {
+export async function addUser(params) {
+  return request('/api/sys/user/addUser', {
     method: 'POST',
     data: { ...params, method: 'post' },
   });
 }
-export async function updateRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
+export async function updateUser(params) {
+  return request('/api/sys/user/updateUser', {
+    method: 'PUT',
     data: { ...params, method: 'update' },
   });
 }

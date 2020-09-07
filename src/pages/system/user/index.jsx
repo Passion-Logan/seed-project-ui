@@ -4,10 +4,13 @@ import { Spin, Button, Dropdown, Menu, Divider, message } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
-import { queryUser, addUser } from './service';
+import { queryUser, addUser, updateUser, removeUser } from './service';
 import CreateForm from './components/CreateForm';
 
-// 添加用户
+/**
+ * 添加用户
+ * @param {用户实体} fields 
+ */
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
@@ -19,6 +22,25 @@ const handleAdd = async (fields) => {
   } catch (error) {
     hide();
     message.error('添加失败请重试!');
+    return false;
+  }
+};
+
+/**
+ * 修改用户
+ * @param {用户实体} fields 
+ */
+const handleUpdate = async fields => {
+  const hide = message.loading('正在修改')
+
+  try {
+    await updateUser({...fields});
+    hide();
+    message.success('修改成功')
+    return true;
+  } catch (error) {
+    hide();
+    message.error('修改失败');
     return false;
   }
 };
@@ -168,10 +190,27 @@ const User = () => {
       </CreateForm>
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
-        <UpdateForm>
-          
-        </UpdateForm>
-      )}
+        <UpdateForm
+          onSubmit={async value => {
+            const success = await handleUpdate(value);
+
+            if (success) {
+              handleUpdateModalVisible(false);
+              setStepFormValues({});
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onCancel={() => {
+            handleUpdateModalVisible(false);
+            setStepFormValues({});
+          }}
+          updateModalVisible={updateModalVisible}
+          values={stepFormValues}
+        />
+      ) : null}
     </PageHeaderWrapper>
   );
 };
