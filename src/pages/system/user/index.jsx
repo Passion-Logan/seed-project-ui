@@ -9,7 +9,7 @@ import CreateForm from './components/CreateForm';
 
 /**
  * 添加用户
- * @param {用户实体} fields 
+ * @param {用户实体} fields
  */
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
@@ -28,15 +28,15 @@ const handleAdd = async (fields) => {
 
 /**
  * 修改用户
- * @param {用户实体} fields 
+ * @param {用户实体} fields
  */
-const handleUpdate = async fields => {
-  const hide = message.loading('正在修改')
+const handleUpdate = async (fields) => {
+  const hide = message.loading('正在修改');
 
   try {
-    await updateUser({...fields});
+    await updateUser({ ...fields });
     hide();
-    message.success('修改成功')
+    message.success('修改成功');
     return true;
   } catch (error) {
     hide();
@@ -191,7 +191,7 @@ const User = () => {
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
-          onSubmit={async value => {
+          onSubmit={async (value) => {
             const success = await handleUpdate(value);
 
             if (success) {
