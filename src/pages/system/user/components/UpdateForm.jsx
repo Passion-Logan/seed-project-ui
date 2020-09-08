@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Modal, Select, Input, Switch } from 'antd';
 
 const FormItem = Form.Item;
+const { Option } = Select;
 
 const formLayout = {
   labelCol: {
@@ -64,10 +65,7 @@ const UpdateForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
-        <FormItem
-          name="password"
-          label="密码"
-        >
+        <FormItem name="password" label="密码">
           <Input placeholder="新密码" />
         </FormItem>
         <FormItem name="sex" label="性别">
@@ -93,7 +91,7 @@ const UpdateForm = (props) => {
           <Input placeholder="请输入" />
         </FormItem>
         <FormItem name="enabled" label="状态">
-          <Switch checkedChildren="开启" unCheckedChildren="禁用" defaultChecked></Switch>
+          <Switch defaultChecked checkedChildren="开启" unCheckedChildren="禁用"></Switch>
         </FormItem>
       </>
     );
