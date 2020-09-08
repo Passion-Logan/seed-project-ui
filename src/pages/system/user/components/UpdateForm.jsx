@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Form } from 'antd';
+import { Form, Button } from 'antd';
+import { values, update } from 'lodash';
+import Modal from 'antd/lib/modal/Modal';
 
 const FormItem = Form.Item;
 
@@ -104,5 +106,43 @@ const renderContent = () => {
     </>
   );
 };
+
+const renderFooter = () => {
+  return (
+    <>
+      <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
+      <Button onClick={() => handleNext()}>完成</Button>
+    </>
+  );
+};
+
+return (
+  <Modal
+    width={640}
+    bodyStyle={{
+      padding: '32px 40px 48px',
+    }}
+    destroyOnClose
+    title="修改用户"
+    visible={updateModalVisible}
+    footerr={renderFooter}
+    onCancel={() => handleUpdateModalVisible()}
+  >
+    <Form
+      {...formLayout}
+      form={form}
+      initialValues={{
+        userName: formVals.userName,
+        nickName: formVals.nickName,
+        password: formVals.password,
+        sex: formVals.sex,
+        email: formVals.email,
+        enabled: formVals.enabled,
+      }}
+    >
+      {renderContent()}
+    </Form>
+  </Modal>
+);
 
 export default UpdateForm;
