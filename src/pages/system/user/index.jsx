@@ -6,6 +6,7 @@ import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
 import { queryUser, addUser, updateUser, removeUser } from './service';
 import CreateForm from './components/CreateForm';
+import UpdateForm from './components/UpdateForm';
 
 /**
  * 添加用户
