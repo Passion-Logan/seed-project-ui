@@ -106,7 +106,7 @@ const User = () => {
           text: '禁用',
         },
         true: {
-          text: '正常',
+          text: '开启',
         },
       },
     },
@@ -193,6 +193,7 @@ const User = () => {
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {
+            console.log(value)
             const success = await handleUpdate(value);
 
             if (success) {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Switch } from 'antd';
+import { Form, Button, Modal, Select, Input, Switch, Radio } from 'antd';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const RadioGroup = Radio.Group;
 
 const formLayout = {
   labelCol: {
@@ -17,10 +18,9 @@ const UpdateForm = (props) => {
   const [formVals, setFormVals] = useState({
     userName: props.values.userName,
     nickName: props.values.nickName,
-    password: props.values.password,
     sex: props.values.sex,
     email: props.values.email,
-    enabled: props.values.enabled,
+    enabled: props.values.enabled.toString(),
   });
 
   const [form] = Form.useForm();
@@ -32,6 +32,8 @@ const UpdateForm = (props) => {
   } = props;
 
   const handleNext = async () => {
+    debugger
+    console.log('3213')
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
 
@@ -65,9 +67,6 @@ const UpdateForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
-        <FormItem name="password" label="密码">
-          <Input placeholder="新密码" />
-        </FormItem>
         <FormItem name="sex" label="性别">
           <Select
             style={{
@@ -91,7 +90,10 @@ const UpdateForm = (props) => {
           <Input placeholder="请输入" />
         </FormItem>
         <FormItem name="enabled" label="状态">
-          <Switch defaultChecked checkedChildren="开启" unCheckedChildren="禁用"></Switch>
+          <RadioGroup>
+            <Radio value="true">开启</Radio>
+            <Radio value="false">禁用</Radio>
+          </RadioGroup>
         </FormItem>
       </>
     );
@@ -101,7 +103,7 @@ const UpdateForm = (props) => {
     return (
       <>
         <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
-        <Button onClick={() => handleNext()}>完成</Button>
+        <Button type="primary" onClick={() => handleNext()}>完成</Button>
       </>
     );
   };
@@ -115,7 +117,7 @@ const UpdateForm = (props) => {
       destroyOnClose
       title="修改用户"
       visible={updateModalVisible}
-      footerr={renderFooter}
+      footer={renderFooter()}
       onCancel={() => handleUpdateModalVisible()}
     >
       <Form
