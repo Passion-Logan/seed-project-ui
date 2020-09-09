@@ -100,7 +100,6 @@ const User = () => {
       title: '状态',
       dataIndex: 'enabled',
       hideInForm: true,
-      hideInSearch: true,
       valueEnum: {
         false: {
           text: '禁用',
@@ -193,7 +192,6 @@ const User = () => {
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {
-            console.log(value)
             const success = await handleUpdate(value);
 
             if (success) {

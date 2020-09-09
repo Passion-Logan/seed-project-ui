@@ -16,6 +16,7 @@ const formLayout = {
 
 const UpdateForm = (props) => {
   const [formVals, setFormVals] = useState({
+    id: props.values.id,
     userName: props.values.userName,
     nickName: props.values.nickName,
     sex: props.values.sex,
@@ -32,8 +33,6 @@ const UpdateForm = (props) => {
   } = props;
 
   const handleNext = async () => {
-    debugger
-    console.log('3213')
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
 
@@ -43,6 +42,19 @@ const UpdateForm = (props) => {
   const renderContent = () => {
     return (
       <>
+      <FormItem
+          hidden
+          name="id"
+          label="主键"
+          rules={[
+            {
+              required: true,
+              message: '主键不能为空',
+            },
+          ]}
+        >
+          <Input placeholder="主键" />
+        </FormItem>
         <FormItem
           name="userName"
           label="账号"
@@ -124,6 +136,7 @@ const UpdateForm = (props) => {
         {...formLayout}
         form={form}
         initialValues={{
+          id: formVals.id,
           userName: formVals.userName,
           nickName: formVals.nickName,
           sex: formVals.sex,
