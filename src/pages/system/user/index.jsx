@@ -7,6 +7,7 @@ import styles from './index.less';
 import { queryUser, addUser, updateUser, removeUser } from './service';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
+import { map } from 'lodash';
 
 /**
  * 添加用户
@@ -42,6 +43,26 @@ const handleUpdate = async (fields) => {
   } catch (error) {
     hide();
     message.error('修改失败');
+    return false;
+  }
+};
+
+const handleRemove = async selectedRows => {
+  const hide = message.loading('正在删除')
+  if (!selectedRows) return true;
+
+  try {
+    let ids = ''
+    ids = selectedRows.map(row => ids + row.id + ',')
+    await removeUser({
+      ids: ids,
+    });
+    hide();
+    message.success('删除成功,即将刷新')
+    return true;
+  } catch (error) {
+    hide();
+    message.error('删除失败,请重试')
     return false;
   }
 };
@@ -155,10 +176,12 @@ const User = () => {
           selectedRows && selectedRows.length > 0 && (
             <Button
               key="remove"
-              onClick={() => {
-                window.alert(selectedRowKeys.join('-'));
+              onClick={async () => {
+                // window.alert(selectedRowKeys.join(','));
+                await handleRemove(selectedRows)
                 action.reload();
               }}
+              selectedKeys={[]}
             >
               批量删除
             </Button>
