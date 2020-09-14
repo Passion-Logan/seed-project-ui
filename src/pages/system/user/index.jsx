@@ -42,27 +42,23 @@ const handleUpdate = async (fields) => {
     return true;
   } catch (error) {
     hide();
-    message.error('修改失败');
+    message.error(error);
     return false;
   }
 };
 
-const handleRemove = async selectedRows => {
-  const hide = message.loading('正在删除')
-  if (!selectedRows) return true;
+const handleRemove = async (selectedRowKeys) => {
+  const hide = message.loading('正在删除');
+  if (!selectedRowKeys) return true;
 
   try {
-    let ids = ''
-    ids = selectedRows.map(row => ids + row.id + ',')
     await removeUser({
-      ids: ids,
+      ids: selectedRowKeys,
     });
     hide();
-    message.success('删除成功,即将刷新')
     return true;
   } catch (error) {
     hide();
-    message.error('删除失败,请重试')
     return false;
   }
 };
@@ -178,7 +174,7 @@ const User = () => {
               key="remove"
               onClick={async () => {
                 // window.alert(selectedRowKeys.join(','));
-                await handleRemove(selectedRows)
+                await handleRemove(selectedRowKeys.join(','));
                 action.reload();
               }}
               selectedKeys={[]}

@@ -9,18 +9,18 @@ export async function queryUser(params) {
 export async function removeUser(params) {
   return request('/api/sys/user/removeUser', {
     method: 'DELETE',
-    data: { ...params, method: 'delete' },
+    data: { ...params },
   });
 }
 export async function addUser(params) {
   return request('/api/sys/user/addUser', {
     method: 'POST',
-    data: { ...params, method: 'post' },
+    data: { ...params },
   });
 }
 export async function updateUser(params) {
   return request('/api/sys/user/updateUser', {
     method: 'PUT',
-    data: { ...params, method: 'update' },
+    data: { ...params },
   });
 }
