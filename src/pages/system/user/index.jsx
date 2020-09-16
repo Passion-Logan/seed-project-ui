@@ -193,6 +193,11 @@ const User = () => {
     },
   ];
 
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 15 },
+  };
+
   return (
     <PageHeaderWrapper className={styles.main}>
       <ProTable
@@ -279,6 +284,7 @@ const User = () => {
         destroyOnClose
       >
         <Form
+          {...layout}
           initialValues={{
             userName: pwdValues.userName,
             password: null,
