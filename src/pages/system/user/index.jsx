@@ -1,13 +1,15 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { Spin, Button, Dropdown, Menu, Divider, message } from 'antd';
-import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { Spin, Button, Dropdown, Menu, Divider, message, Input } from 'antd';
+import { PlusOutlined, DownOutlined, EyeTwoTone, EyeInvisibleTwoTone } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
-import { queryUser, addUser, updateUser, removeUser } from './service';
+import { queryUser, addUser, updateUser, removeUser, updatePassword } from './service';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import { map } from 'lodash';
+import Modal from 'antd/lib/modal/Modal';
+import Form from 'antd/lib/form/Form';
+import FormItem from 'antd/lib/form/FormItem';
 
 /**
  * 添加用户
@@ -47,6 +49,10 @@ const handleUpdate = async (fields) => {
   }
 };
 
+/**
+ * 删除用户
+ * @param {*} selectedRowKeys
+ */
 const handleRemove = async (selectedRowKeys) => {
   const hide = message.loading('正在删除');
   if (!selectedRowKeys) return true;
@@ -63,10 +69,31 @@ const handleRemove = async (selectedRowKeys) => {
   }
 };
 
+/**
+ * 修改密码
+ * @param {*} fields
+ */
+const updatePwd = async (fields) => {
+  const hide = message.loading('正在修改');
+
+  try {
+    await updatePassword({ ...fields });
+    hide();
+    message.success('修改成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error(error);
+    return false;
+  }
+};
+
 const User = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [updatePwdVisible, handleUpdatePwdVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
+  const [pwdValues, setPwdValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
@@ -153,6 +180,14 @@ const User = () => {
             编辑
           </a>
           <Divider type="vertical" />
+          <a
+            onClick={() => {
+              handleUpdatePwdVisible(true);
+              setPwdValues(record);
+            }}
+          >
+            修改密码
+          </a>
         </>
       ),
     },
@@ -173,7 +208,6 @@ const User = () => {
             <Button
               key="remove"
               onClick={async () => {
-                // window.alert(selectedRowKeys.join(','));
                 await handleRemove(selectedRowKeys.join(','));
                 action.reload();
               }}
@@ -230,6 +264,38 @@ const User = () => {
           values={stepFormValues}
         />
       ) : null}
+
+      <Modal
+        title="修改密码"
+        visible={updatePwdVisible}
+        onOk={() => {
+          handleUpdatePwdVisible(false);
+        }}
+        onCancel={() => {
+          handleUpdatePwdVisible(false);
+        }}
+        okText="确认"
+        cancelText="取消"
+        destroyOnClose
+      >
+        <Form
+          initialValues={{
+            userName: pwdValues.userName,
+            password: null,
+          }}
+        >
+          <FormItem label="账号" name="userName">
+            <Input disabled />
+          </FormItem>
+          <FormItem
+            label="密码"
+            name="password"
+            rules={[{ required: true, message: '密码不能为空' }]}
+          >
+            <Input placeholder="请输入新密码" />
+          </FormItem>
+        </Form>
+      </Modal>
     </PageHeaderWrapper>
   );
 };

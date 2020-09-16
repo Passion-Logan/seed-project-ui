@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Switch, Radio } from 'antd';
+import { Form, Button, Modal, Select, Input, Radio } from 'antd';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -42,7 +42,7 @@ const UpdateForm = (props) => {
   const renderContent = () => {
     return (
       <>
-      <FormItem
+        <FormItem
           hidden
           name="id"
           label="主键"
@@ -115,7 +115,9 @@ const UpdateForm = (props) => {
     return (
       <>
         <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
-        <Button type="primary" onClick={() => handleNext()}>完成</Button>
+        <Button type="primary" onClick={() => handleNext()}>
+          完成
+        </Button>
       </>
     );
   };
