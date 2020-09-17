@@ -1,15 +1,13 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef } from 'react';
-import { Spin, Button, Dropdown, Menu, Divider, message, Input } from 'antd';
-import { PlusOutlined, DownOutlined, EyeTwoTone, EyeInvisibleTwoTone } from '@ant-design/icons';
+import React, { useState, useRef } from 'react';
+import { Button, Divider, message, Input, Form } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
 import { queryUser, addUser, updateUser, removeUser, updatePassword } from './service';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import Modal from 'antd/lib/modal/Modal';
-import Form from 'antd/lib/form/Form';
-import FormItem from 'antd/lib/form/FormItem';
 
 /**
  * 添加用户
@@ -25,7 +23,6 @@ const handleAdd = async (fields) => {
     return true;
   } catch (error) {
     hide();
-    message.error('添加失败请重试!');
     return false;
   }
 };
@@ -44,7 +41,6 @@ const handleUpdate = async (fields) => {
     return true;
   } catch (error) {
     hide();
-    message.error(error);
     return false;
   }
 };
@@ -71,7 +67,6 @@ const handleRemove = async (selectedRowKeys) => {
 
 /**
  * 修改密码
- * @param {*} fields
  */
 const updatePwd = async (fields) => {
   const hide = message.loading('正在修改');
@@ -83,12 +78,22 @@ const updatePwd = async (fields) => {
     return true;
   } catch (error) {
     hide();
-    message.error(error);
     return false;
   }
 };
 
+const formLayout = {
+  labelCol: {
+    span: 5,
+  },
+  wrapperCol: {
+    span: 17,
+  },
+};
+
 const User = () => {
+  const FormItem = Form.Item;
+  const [form] = Form.useForm();
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [updatePwdVisible, handleUpdatePwdVisible] = useState(false);
@@ -193,11 +198,6 @@ const User = () => {
     },
   ];
 
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
-
   return (
     <PageHeaderWrapper className={styles.main}>
       <ProTable
@@ -273,7 +273,9 @@ const User = () => {
       <Modal
         title="修改密码"
         visible={updatePwdVisible}
-        onOk={() => {
+        onOk={async () => {
+          const formValues = await form.validateFields();
+          updatePwd(formValues);
           handleUpdatePwdVisible(false);
         }}
         onCancel={() => {
@@ -284,7 +286,8 @@ const User = () => {
         destroyOnClose
       >
         <Form
-          {...layout}
+          {...formLayout}
+          form={form}
           initialValues={{
             userName: pwdValues.userName,
             password: null,

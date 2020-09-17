@@ -26,7 +26,6 @@ export async function updateUser(params) {
 }
 export async function updatePassword(params) {
   return request('/api/sys/user/updatePassword', {
-    method: 'GET',
-    data: { ...params },
+    params,
   });
 }
