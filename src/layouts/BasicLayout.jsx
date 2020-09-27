@@ -13,6 +13,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+import { createFromIconfontCN } from '@ant-design/icons';
 
 const noMatch = (
   <Result
@@ -91,6 +92,10 @@ const BasicLayout = (props) => {
   /**
    * init variables
    */
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_2104687_byby3v1p14q.js',
+  });
+
   const menuDataRender = () => menuList;
 
   const handleMenuCollapse = (payload) => {
@@ -127,17 +132,13 @@ const BasicLayout = (props) => {
       //   );
       // }}
       // menuItemRender={(menuItemProps, defaultDom) => {
-      //   if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
+      //   if (menuItemProps.isUrl || !menuItemProps.path) {
       //     return defaultDom;
       //   }
       //   return (
       //     <Link to={menuItemProps.path}>
-      //       <ul>
-      //         <Menu.Item key={menuItemProps.menuId}>
-      //           <IconFont type={menuItemProps.icon} style={{ fontSize: '20px' }} />
-      //           {menuItemProps.name}
-      //         </Menu.Item>
-      //       </ul>
+      //       <IconFont type={menuItemProps.icon === null ? 'icon-9' : menuItemProps.icon} />
+      //       {defaultDom}
       //     </Link>
       //   );
       // }}

@@ -23,13 +23,13 @@ const UserModel = {
     //   });
     // },
 
-    *fetchUserNav(_, { call, put }) {
-      const response = yield call(getUserNav);
-      yield put({
-        type: 'getUserNav',
-        payload: response,
-      });
-    },
+    // *fetchUserNav(_, { call, put }) {
+    //   const response = yield call(getUserNav);
+    //   yield put({
+    //     type: 'getUserNav',
+    //     payload: response,
+    //   });
+    // },
 
     *fetchUserInfo(_, { call, put }) {
       const response = yield call(getUserInfo);
