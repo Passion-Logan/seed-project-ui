@@ -22,9 +22,9 @@ class SecurityLayout extends React.Component {
       dispatch({
         type: 'user/fetchUserInfo',
       });
-      dispatch({
-        type: 'user/fetchUserNav'
-      });
+      // dispatch({
+      //   type: 'user/fetchUserNav'
+      // });
     }
   }
 

@@ -4,11 +4,11 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 // import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import ProLayout from '@ant-design/pro-layout';
+import ProLayout, { PageContainer, MenuDataItem } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import { Link, useIntl, connect } from 'umi';
 // import { GithubOutlined } from '@ant-design/icons';
-import { Result, Button } from 'antd';
+import { Result, Button, Menu } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
@@ -30,21 +30,14 @@ const noMatch = (
 /**
  * use Authorized check all menu item
  */
-const menuDataRender = (menuList) =>
-  menuList.map((item) => {
-    const localItem = {
-      ...item,
-      children: item.children ? menuDataRender(item.children) : undefined,
-    };
-    return Authorized.check(item.authority, localItem, null);
-  });
-// menuList.map(item => {
-//   const localItem = {
-//     ...item,
-//     children: item.children ? menuDataRender(item.children) : undefined,
-//   };
-//   return Authorized.check(item.authority, localItem, null);
-// });
+// const menuDataRender = menuList =>
+//   menuList.map((item) => {
+//     const localItem = {
+//       ...item,
+//       children: item.children ? menuDataRender(item.children) : undefined,
+//     };
+//     return Authorized.check(item.authority, localItem, null);
+//   });
 
 // const defaultFooterDom = (
 //   <DefaultFooter
@@ -77,27 +70,28 @@ const BasicLayout = (props) => {
     dispatch,
     children,
     settings,
+    menuList,
     location = {
       pathname: '/',
     },
   } = props;
+
   /**
    * constructor
    */
 
   useEffect(() => {
     if (dispatch) {
-      // dispatch({
-      //   type: 'user/fetchCurrent',
-      // });
       dispatch({
-        type: 'menu/fetchUserNav'
+        type: 'menu/fetchUserNav',
       });
     }
   }, []);
+
   /**
    * init variables
    */
+  const menuDataRender = () => menuList;
 
   const handleMenuCollapse = (payload) => {
     if (dispatch) {
@@ -112,6 +106,7 @@ const BasicLayout = (props) => {
     authority: undefined,
   };
   const { formatMessage } = useIntl();
+
   return (
     <ProLayout
       logo={logo}
@@ -123,6 +118,29 @@ const BasicLayout = (props) => {
         </Link>
       )}
       onCollapse={handleMenuCollapse}
+      // subMenuItemRender={(HeaderViewProps, defaultDom) => {
+      //   return (
+      //     <p>
+      //       <IconFont type={HeaderViewProps.icon} style={{ fontSize: '20px' }} />
+      //       {HeaderViewProps.name}
+      //     </p>
+      //   );
+      // }}
+      // menuItemRender={(menuItemProps, defaultDom) => {
+      //   if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
+      //     return defaultDom;
+      //   }
+      //   return (
+      //     <Link to={menuItemProps.path}>
+      //       <ul>
+      //         <Menu.Item key={menuItemProps.menuId}>
+      //           <IconFont type={menuItemProps.icon} style={{ fontSize: '20px' }} />
+      //           {menuItemProps.name}
+      //         </Menu.Item>
+      //       </ul>
+      //     </Link>
+      //   );
+      // }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
@@ -160,7 +178,8 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, settings }) => ({
+export default connect(({ global, settings, menu }) => ({
   collapsed: global.collapsed,
   settings,
+  menuList: menu.menuList,
 }))(BasicLayout);

@@ -12,17 +12,17 @@ export default {
     *fetchUserNav(_, { call, put }) {
       const response = yield call(getUserNav);
       yield put({
-        type: 'menuList',
-        payload: response,
+        type: 'getData',
+        payload: response.menuData,
       });
     },
   },
 
   reducers: {
-    menuList(state, action) {
+    getData(state, action) {
       return {
         ...state,
-        list: action.payload
+        menuList: action.payload || [],
       }
     }
   }

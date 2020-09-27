@@ -12,6 +12,6 @@ const proSettings = {
   },
   title: 'Seed Project',
   pwa: false,
-  iconfontUrl: '',
+  iconfontUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
 };
 export default proSettings;

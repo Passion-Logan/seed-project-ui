@@ -9,7 +9,7 @@ export default {
   dev: {
     '/api/': {
       // target: 'https://preview.pro.ant.design',
-      target: 'http://localhost:8080/',
+      target: 'http://localhost:8081/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '/seed-project',
