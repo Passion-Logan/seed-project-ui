@@ -1,9 +1,10 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Form, Spin } from 'antd';
+import { Button, Divider, Form, Spin } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
+import { getMenuList } from './service';
 
 const Menu = () => {
   // const [loading, setLoading] = useState(true);
@@ -19,7 +20,7 @@ const Menu = () => {
   const columns = [
     {
       title: '菜单名称',
-      dataIndex: 'userName',
+      dataIndex: 'menu',
       hideInSearch: true,
       rules: [
         {
@@ -30,7 +31,8 @@ const Menu = () => {
     },
     {
       title: '菜单类型',
-      dataIndex: 'sex',
+      dataIndex: 'type',
+      hideInSearch: true,
       valueEnum: {
         1: {
           text: '目录',
@@ -42,15 +44,17 @@ const Menu = () => {
     },
     {
       title: 'icon',
-      dataIndex: 'nickName',
+      hideInSearch: true,
+      dataIndex: 'icon',
     },
     {
       title: '路由名称',
-      dataIndex: 'nickName',
+      hideInSearch: true,
+      dataIndex: 'componentName',
     },
     {
       title: '路径',
-      dataIndex: 'password',
+      dataIndex: 'component',
       hideInSearch: true,
       hideInTable: true,
       rules: [
@@ -62,13 +66,13 @@ const Menu = () => {
     },
     {
       title: '排序',
-      dataIndex: 'email',
+      dataIndex: 'sort',
       hideInSearch: true,
     },
     {
       title: '是否可见菜单',
-      dataIndex: 'enabled',
-      hideInForm: true,
+      dataIndex: 'hideInMenu',
+      hideInSearch: true,
       valueEnum: {
         false: {
           text: '否',
@@ -124,6 +128,7 @@ const Menu = () => {
             </Button>
           )
         ]}
+        request={() => getMenuList()}
         columns={columns}
         rowSelection={{}}
       >
