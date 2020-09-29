@@ -152,9 +152,11 @@ const User = () => {
       valueEnum: {
         false: {
           text: '禁用',
+          status: 'Default',
         },
         true: {
           text: '开启',
+          status: 'Success'
         },
       },
     },

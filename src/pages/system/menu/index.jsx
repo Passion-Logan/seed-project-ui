@@ -1,19 +1,21 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Form, Spin } from 'antd';
+import { Button, Divider, Form, Space, Spin, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { getMenuList } from './service';
 
 const Menu = () => {
-
   const FormItem = Form.Item;
   const [form] = Form.useForm();
   const actionRef = useRef();
+
+  const [stepFormValues, setStepFormValues] = useState({});
+
   const columns = [
     {
-      title: '菜单名称',
+      title: '显示名称',
       dataIndex: 'menu',
       hideInSearch: true,
       rules: [
@@ -26,14 +28,11 @@ const Menu = () => {
     {
       title: '菜单类型',
       dataIndex: 'type',
+      filters: false,
       hideInSearch: true,
       valueEnum: {
-        1: {
-          text: '目录',
-        },
-        2: {
-          text: '菜单',
-        },
+        1: <Tag color="blue">目录</Tag>,
+        2: <Tag color="green">菜单</Tag>,
       },
     },
     {
@@ -42,15 +41,14 @@ const Menu = () => {
       dataIndex: 'icon',
     },
     {
-      title: '路由名称',
+      title: '菜单名称',
       hideInSearch: true,
       dataIndex: 'componentName',
     },
     {
-      title: '路径',
-      dataIndex: 'component',
+      title: '菜单路径',
+      dataIndex: 'path',
       hideInSearch: true,
-      hideInTable: true,
       rules: [
         {
           required: true,
@@ -69,9 +67,11 @@ const Menu = () => {
       hideInSearch: true,
       valueEnum: {
         false: {
+          status: 'Default',
           text: '否',
         },
         true: {
+          status: 'Success',
           text: '是',
         },
       },
@@ -111,23 +111,19 @@ const Menu = () => {
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-          <Button type="primary" >
+          <Button type="primary">
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
-            <Button key="removes"
-            selectedKeys={[]}
-            >
+            <Button key="removes" selectedKeys={[]}>
               批量删除
             </Button>
-          )
+          ),
         ]}
         request={() => getMenuList()}
         columns={columns}
         rowSelection={{}}
-      >
-
-      </ProTable>
+      ></ProTable>
     </PageHeaderWrapper>
   );
 };
