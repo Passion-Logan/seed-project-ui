@@ -41,11 +41,15 @@ const Menu = () => {
       },
     },
     {
+      title: 'icon',
+      dataIndex: 'nickName',
+    },
+    {
       title: '路由名称',
       dataIndex: 'nickName',
     },
     {
-      title: '路由路径',
+      title: '路径',
       dataIndex: 'password',
       hideInSearch: true,
       hideInTable: true,
@@ -55,18 +59,6 @@ const Menu = () => {
           message: '密码为必填项',
         },
       ],
-    },
-    {
-      title: '启用',
-      dataIndex: 'sex',
-      valueEnum: {
-        1: {
-          text: '启用',
-        },
-        2: {
-          text: '停用',
-        },
-      },
     },
     {
       title: '排序',
@@ -79,10 +71,10 @@ const Menu = () => {
       hideInForm: true,
       valueEnum: {
         false: {
-          text: '禁用',
+          text: '否',
         },
         true: {
-          text: '开启',
+          text: '是',
         },
       },
     },

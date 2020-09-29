@@ -3,12 +3,12 @@ export default {
     menuData: [
       {
         path: '/',
-        // icon: 'icon-chaoren',
+        icon: 'smile',
         redirect: '/welcome',
       },
       {
         path: '/user',
-        // icon: 'icon-chaoren',
+        icon: 'smile',
         children: [
           {
             name: 'login',
@@ -18,41 +18,42 @@ export default {
       },
       {
         path: '/welcome',
-        // icon: 'icon-chaoren',
+        hideInMenu: true,
+        icon: 'smile',
         name: 'welcome',
       },
       {
         path: '/admin',
-        // icon: 'icon-9',
+        icon: 'smile',
         name: 'admin',
         children: [
           {
             path: '/admin/sub-page',
-            // icon: 'icon-chaoren',
+            icon: 'smile',
             name: 'sub-page',
           }
         ]
       },
       {
         name: 'list.table-list',
-        // icon: 'icon-chaoren',
+        icon: 'smile',
         path: '/list',
       },
       {
         path: '/test',
-        // icon: 'icon-chaoren',
+        icon: 'smile',
         name: 'test',
         children: [
           {
             path: '/test/sub-test',
-            // icon: 'icon-chaoren',
+            icon: 'smile',
             name: 'sub-test',
           }
         ]
       },
       {
         name: 'system',
-        // icon: 'icon-chaoren',
+        icon: 'setting',
         path: '/system',
         children: [
           {

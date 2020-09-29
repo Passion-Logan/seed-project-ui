@@ -14,6 +14,8 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import { createFromIconfontCN } from '@ant-design/icons';
+import iconEnum from './IconEnum';
+import { isUndefined } from 'lodash';
 
 const noMatch = (
   <Result
@@ -92,11 +94,20 @@ const BasicLayout = (props) => {
   /**
    * init variables
    */
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_2104687_byby3v1p14q.js',
-  });
+  const mappingIcon = menuData => {
+    const mappingMenu = menuData.map(item => ({
+      ...item,
+      icon: iconEnum[item.icon],
+      children: item.children ? mappingIcon(item.children) : [],
+    }));
+    return mappingMenu;
+  }
 
-  const menuDataRender = () => menuList;
+  const menuDataRender = () => {
+    if (!isUndefined(menuList)) {
+      return mappingIcon(menuList)
+    }
+  };
 
   const handleMenuCollapse = (payload) => {
     if (dispatch) {
@@ -123,25 +134,6 @@ const BasicLayout = (props) => {
         </Link>
       )}
       onCollapse={handleMenuCollapse}
-      // subMenuItemRender={(HeaderViewProps, defaultDom) => {
-      //   return (
-      //     <p>
-      //       <IconFont type={HeaderViewProps.icon} style={{ fontSize: '20px' }} />
-      //       {HeaderViewProps.name}
-      //     </p>
-      //   );
-      // }}
-      // menuItemRender={(menuItemProps, defaultDom) => {
-      //   if (menuItemProps.isUrl || !menuItemProps.path) {
-      //     return defaultDom;
-      //   }
-      //   return (
-      //     <Link to={menuItemProps.path}>
-      //       <IconFont type={menuItemProps.icon === null ? 'icon-9' : menuItemProps.icon} />
-      //       {defaultDom}
-      //     </Link>
-      //   );
-      // }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
