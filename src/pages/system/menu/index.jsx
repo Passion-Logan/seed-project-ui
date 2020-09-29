@@ -7,12 +7,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getMenuList } from './service';
 
 const Menu = () => {
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 3000);
-  // }, []);
 
   const FormItem = Form.Item;
   const [form] = Form.useForm();
@@ -113,9 +107,9 @@ const Menu = () => {
   return (
     <PageHeaderWrapper className={styles.main}>
       <ProTable
-        headerTitle="菜单表格"
+        search={false}
         actionRef={actionRef}
-        rowKey={(row) => row.id}
+        rowKey="id"
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
           <Button type="primary" >
             <PlusOutlined /> 新建
