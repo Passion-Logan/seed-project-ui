@@ -5,12 +5,14 @@ import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { getMenuList } from './service';
+import AllForm from './components/AllForm';
 
 const Menu = () => {
   const FormItem = Form.Item;
   const [form] = Form.useForm();
   const actionRef = useRef();
 
+  const [modalVisible, handleModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
 
   const columns = [
@@ -84,7 +86,7 @@ const Menu = () => {
         <>
           <a
             onClick={() => {
-              handleUpdateModalVisible(true);
+              handleModalVisible(true);
               setStepFormValues(record);
             }}
           >
@@ -123,7 +125,11 @@ const Menu = () => {
         request={() => getMenuList()}
         columns={columns}
         rowSelection={{}}
-      ></ProTable>
+      />
+
+      <AllForm>
+        
+      </AllForm>
     </PageHeaderWrapper>
   );
 };
