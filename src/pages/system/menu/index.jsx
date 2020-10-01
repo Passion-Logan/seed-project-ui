@@ -7,6 +7,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getMenuList } from './service';
 import AllForm from './components/AllForm';
 
+const handleAdd = async (fields) => {};
+
+const handleUpdate = async (fields) => {};
+
 const Menu = () => {
   const FormItem = Form.Item;
   const [form] = Form.useForm();
@@ -128,8 +132,30 @@ const Menu = () => {
       />
 
       <AllForm
-        onSublit={}
-        onUpdate={}
+        onSublit={async (value) => {
+          const success = await handleAdd(value);
+
+          if (success) {
+            handleModalVisible(false);
+            setStepFormValues({});
+
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+        onUpdate={async (value) => {
+          const success = await handleUpdate(value);
+
+          if (success) {
+            handleModalVisible(false);
+            setStepFormValues({});
+
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
         onCancel={() => {
           handleModalVisible(false);
           setStepFormValues({});
