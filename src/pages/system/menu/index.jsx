@@ -127,9 +127,16 @@ const Menu = () => {
         rowSelection={{}}
       />
 
-      <AllForm>
-        
-      </AllForm>
+      <AllForm
+        onSublit={}
+        onUpdate={}
+        onCancel={() => {
+          handleModalVisible(false);
+          setStepFormValues({});
+        }}
+        formModalVisible={modalVisible}
+        values={stepFormValues}
+      />
     </PageHeaderWrapper>
   );
 };
