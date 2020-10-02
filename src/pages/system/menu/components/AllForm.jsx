@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Radio, InputNumber } from 'antd';
+import { Form, Button, Modal, Select, Input, Radio, InputNumber, TreeSelect } from 'antd';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -28,6 +28,7 @@ const AllForm = (props) => {
     visible: props.values.hideInMenu,
   });
 
+  const [isMenuChildren, setIsMenuChildren] = useState(false);
   const [form] = Form.useForm();
   const {
     onSubmit: handleAddOrUpdate,
@@ -51,8 +52,10 @@ const AllForm = (props) => {
         </FormItem>
         <FormItem name="type" label="菜单类型">
           <RadioGroup>
-            <Radio value={1}>目录</Radio>
-            <Radio value={2}>子菜单</Radio>
+            <Radio onClick={() => setIsMenuChildren(false)} value={1}>目录</Radio>
+            <Radio onClick={() => setIsMenuChildren(true)} value={2}>
+              子菜单
+            </Radio>
             <Radio value={3} disabled>
               按钮
             </Radio>
@@ -70,6 +73,11 @@ const AllForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
+        {isMenuChildren ? (
+          <FormItem name="pid" label="上级菜单">
+            <TreeSelect />
+          </FormItem>
+        ) : null}
         <FormItem
           name="componentName"
           label="菜单名称"
