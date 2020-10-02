@@ -6,6 +6,7 @@ import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { getMenuList } from './service';
 import AllForm from './components/AllForm';
+import { isEmpty } from 'lodash';
 
 const handleAdd = async (fields) => {};
 
@@ -38,7 +39,7 @@ const Menu = () => {
       hideInSearch: true,
       valueEnum: {
         1: <Tag color="blue">目录</Tag>,
-        2: <Tag color="green">菜单</Tag>,
+        2: <Tag color="green">子菜单</Tag>,
       },
     },
     {
@@ -58,19 +59,17 @@ const Menu = () => {
       rules: [
         {
           required: true,
-          message: '密码为必填项',
+          message: '菜单路径为必填项',
         },
       ],
     },
     {
       title: '排序',
       dataIndex: 'sort',
-      hideInSearch: true,
     },
     {
       title: '是否可见菜单',
       dataIndex: 'hideInMenu',
-      hideInSearch: true,
       valueEnum: {
         false: {
           status: 'Default',
@@ -117,7 +116,23 @@ const Menu = () => {
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-          <Button type="primary">
+          <Button
+            type="primary"
+            onClick={() => {
+              handleModalVisible(true);
+              setStepFormValues({
+                id: null,
+                menu: '',
+                componentName: '',
+                path: '',
+                redirect: '',
+                icon: '',
+                isFrame: false,
+                hideInMenu: true,
+                type: 1,
+              });
+            }}
+          >
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
@@ -131,38 +146,34 @@ const Menu = () => {
         rowSelection={{}}
       />
 
-      <AllForm
-        onSublit={async (value) => {
-          const success = await handleAdd(value);
+      {stepFormValues && Object.keys(stepFormValues).length ? (
+        <AllForm
+          onSubmit={async (value) => {
+            let success;
 
-          if (success) {
+            if (isEmpty(value.id)) {
+              success = await handleAdd(value);
+            } else {
+              success = await handleUpdate(value);
+            }
+
+            if (success) {
+              handleModalVisible(false);
+              setStepFormValues({});
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onCancel={() => {
             handleModalVisible(false);
             setStepFormValues({});
-
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onUpdate={async (value) => {
-          const success = await handleUpdate(value);
-
-          if (success) {
-            handleModalVisible(false);
-            setStepFormValues({});
-
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          handleModalVisible(false);
-          setStepFormValues({});
-        }}
-        formModalVisible={modalVisible}
-        values={stepFormValues}
-      />
+          }}
+          formModalVisible={modalVisible}
+          values={stepFormValues}
+        />
+      ) : null}
     </PageHeaderWrapper>
   );
 };
