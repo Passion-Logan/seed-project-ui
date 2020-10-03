@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Modal, Select, Input, Radio, InputNumber, TreeSelect } from 'antd';
+import { getTreeList } from '../service';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,6 +30,15 @@ const AllForm = (props) => {
   });
 
   const [isMenuChildren, setIsMenuChildren] = useState(false);
+  const [treeNode, setTreeNode] = useState(() => {
+    getTreeList().then((data) => {
+      if (data.success) {
+        const list = genTreeNode(data.data.treeList);
+        setTreeNode(list)
+        return list;
+      }
+    });
+  });
   const [form] = Form.useForm();
   const {
     onSubmit: handleAddOrUpdate,
@@ -36,6 +46,25 @@ const AllForm = (props) => {
     formModalVisible,
     values,
   } = props;
+
+  const genTreeNode = (dataList) => {
+    let data = [];
+
+    if (dataList.length != null) {
+      dataList.map((item) => {
+        data.push({
+          key: item.value,
+          pId: item.pid,
+          value: item.value,
+          title: item.title,
+          isLeaf: !(item.pid == '0'),
+          children: item.children != null ? genTreeNode(item.children) : [],
+        });
+      });
+    }
+
+    return data;
+  };
 
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
@@ -52,7 +81,9 @@ const AllForm = (props) => {
         </FormItem>
         <FormItem name="type" label="菜单类型">
           <RadioGroup>
-            <Radio onClick={() => setIsMenuChildren(false)} value={1}>目录</Radio>
+            <Radio onClick={() => setIsMenuChildren(false)} value={1}>
+              目录
+            </Radio>
             <Radio onClick={() => setIsMenuChildren(true)} value={2}>
               子菜单
             </Radio>
@@ -75,7 +106,13 @@ const AllForm = (props) => {
         </FormItem>
         {isMenuChildren ? (
           <FormItem name="pid" label="上级菜单">
-            <TreeSelect />
+            <TreeSelect
+              treeDataSimpleMode
+              style={{ width: '100%' }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              placeholder="请选择父级菜单"
+              treeData={treeNode}
+            />
           </FormItem>
         ) : null}
         <FormItem

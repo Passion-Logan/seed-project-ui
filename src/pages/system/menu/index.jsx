@@ -4,7 +4,7 @@ import { Button, Divider, Form, Space, Spin, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { getMenuList } from './service';
+import { getMenuList, getTreeList } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
