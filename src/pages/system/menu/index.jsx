@@ -1,6 +1,6 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Form, Space, Spin, Tag } from 'antd';
+import { Button, Divider, Drawer, Form, Space, Spin, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
@@ -147,32 +147,32 @@ const Menu = () => {
       />
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
-        <AllForm
-          onSubmit={async (value) => {
-            let success;
+          <AllForm
+            onSubmit={async (value) => {
+              let success;
 
-            if (isEmpty(value.id)) {
-              success = await handleAdd(value);
-            } else {
-              success = await handleUpdate(value);
-            }
+              if (isEmpty(value.id)) {
+                success = await handleAdd(value);
+              } else {
+                success = await handleUpdate(value);
+              }
 
-            if (success) {
+              if (success) {
+                handleModalVisible(false);
+                setStepFormValues({});
+
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            onCancel={() => {
               handleModalVisible(false);
               setStepFormValues({});
-
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          onCancel={() => {
-            handleModalVisible(false);
-            setStepFormValues({});
-          }}
-          formModalVisible={modalVisible}
-          values={stepFormValues}
-        />
+            }}
+            formModalVisible={modalVisible}
+            values={stepFormValues}
+          />
       ) : null}
     </PageHeaderWrapper>
   );

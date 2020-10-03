@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Radio, InputNumber, TreeSelect } from 'antd';
+import { Form, Button, Select, Input, Radio, InputNumber, TreeSelect, Drawer } from 'antd';
 import { getTreeList } from '../service';
+import { SettingOutlined } from '@ant-design/icons';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -33,9 +34,7 @@ const AllForm = (props) => {
   const [treeNode, setTreeNode] = useState(() => {
     getTreeList().then((data) => {
       if (data.success) {
-        const list = genTreeNode(data.data.treeList);
-        setTreeNode(list)
-        return list;
+        setTreeNode(genTreeNode(data.data.treeList));
       }
     });
   });
@@ -81,7 +80,7 @@ const AllForm = (props) => {
         </FormItem>
         <FormItem name="type" label="菜单类型">
           <RadioGroup>
-            <Radio onClick={() => setIsMenuChildren(false)} value={1}>
+            <Radio disabled={formVals.type == 2} onClick={() => setIsMenuChildren(false)} value={1}>
               目录
             </Radio>
             <Radio onClick={() => setIsMenuChildren(true)} value={2}>
@@ -143,7 +142,7 @@ const AllForm = (props) => {
           <Input placeholder="没有可不填" />
         </FormItem>
         <FormItem name="icon" label="菜单图标">
-          <Input placeholder="点击右侧按钮选择图标" />
+          <Input placeholder="点击右侧按钮选择图标" addonAfter={<SettingOutlined />} />
         </FormItem>
         <FormItem name="sort" label="排序">
           <InputNumber
@@ -181,16 +180,13 @@ const AllForm = (props) => {
   };
 
   return (
-    <Modal
-      width={640}
-      bodyStyle={{
-        padding: '32px 40px 48px',
-      }}
-      destroyOnClose
-      title="新建/编辑菜单"
+    <Drawer
+      width={550}
+      title="新增/编辑菜单"
+      placement="right"
+      closable={false}
+      onClose={() => handleModalVisible()}
       visible={formModalVisible}
-      footer={renderFooter()}
-      onCancel={() => handleModalVisible()}
     >
       <Form
         {...formLayout}
@@ -210,7 +206,7 @@ const AllForm = (props) => {
       >
         {renderContent()}
       </Form>
-    </Modal>
+    </Drawer>
   );
 };
 
