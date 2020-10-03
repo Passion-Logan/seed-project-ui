@@ -41,7 +41,7 @@ const AllForm = (props) => {
   const [form] = Form.useForm();
   const {
     onSubmit: handleAddOrUpdate,
-    onCancel: handleModalVisible,
+    onClose: handleModalVisible,
     formModalVisible,
     values,
   } = props;
@@ -171,10 +171,14 @@ const AllForm = (props) => {
   const renderFooter = () => {
     return (
       <>
-        <Button onClick={() => handleModalVisible(false)}>取消</Button>
-        <Button type="primary" onClick={() => handleNext()}>
-          完成
-        </Button>
+        <div style={{ textAlign: 'right' }}>
+          <Button style={{ marginRight: 10 }} onClick={() => handleModalVisible(false)}>
+            取消
+          </Button>
+          <Button type="primary" onClick={() => handleNext()}>
+            完成
+          </Button>
+        </div>
       </>
     );
   };
@@ -182,11 +186,12 @@ const AllForm = (props) => {
   return (
     <Drawer
       width={550}
-      title="新增/编辑菜单"
-      placement="right"
+      title='新增/编辑菜单'
+      placement='right'
       closable={false}
       onClose={() => handleModalVisible()}
       visible={formModalVisible}
+      footer={renderFooter()}
     >
       <Form
         {...formLayout}

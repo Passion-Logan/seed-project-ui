@@ -146,6 +146,19 @@ const Menu = () => {
         rowSelection={{}}
       />
 
+      {/* {stepFormValues && Object.keys(stepFormValues).length ? (
+        <Drawer
+          title="Create a new account"
+          width={720}
+          placement='right'
+          closable={false}
+          onClose={() => handleModalVisible(false)}
+          visible={modalVisible}
+        >
+          <p>123</p>
+        </Drawer>
+      ) : null} */}
+
       {stepFormValues && Object.keys(stepFormValues).length ? (
           <AllForm
             onSubmit={async (value) => {
@@ -166,9 +179,11 @@ const Menu = () => {
                 }
               }
             }}
-            onCancel={() => {
+            onClose={() => {
               handleModalVisible(false);
-              setStepFormValues({});
+              setTimeout(() => {
+                setStepFormValues({});
+              }, 300)
             }}
             formModalVisible={modalVisible}
             values={stepFormValues}
