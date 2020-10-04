@@ -1,15 +1,6 @@
 import React from 'react';
 import { SmileOutlined, HomeOutlined, PicLeftOutlined, SettingOutlined } from '@ant-design/icons';
-import { Card, Typography } from 'antd';
-
-// const iconEnum = {
-//   SmileOutlined: <SmileOutlined />,
-//   HomeOutlined: <HomeOutlined />,
-//   PicLeftOutlined: <PicLeftOutlined />,
-//   SettingOutlined: <SettingOutlined />,
-// };
-
-const { Paragraph } = Typography;
+import { Card } from 'antd';
 
 const gridStyle = {
   width: '20%',
@@ -18,48 +9,41 @@ const gridStyle = {
   marginTop: '10px',
 };
 
-const divStyle = {
-  marginTop: '10px',
-  marginRight: '10px',
-};
-
 const iconStyle = {
   fontSize: '20px',
 };
 
-// const iconEnum = {
-//   SmileOutlined: (
-//     <span style={divStyle}>
-//       <Paragraph style={{display: "inline"}} copyable={{ text: 'SmileOutlined' }}>
-//         <SmileOutlined style={iconStyle} />
-//       </Paragraph>
-//     </span>
-//   ),
-//   HomeOutlined: <HomeOutlined />,
-//   PicLeftOutlined: <PicLeftOutlined />,
-//   SettingOutlined: <SettingOutlined />,
-// };
+const copy = (val) => {
+  // const range = document.createRange();
+  // window.getSelection().removeAllRanges();
+  // range
+};
 
 const iconEnum = {
   SmileOutlined: (
     <Card.Grid style={gridStyle}>
-      <SmileOutlined style={iconStyle} />
-      <p>SmileOutlined</p>
+      <span onClick={() => copy('SmileOutlined')}>
+        <SmileOutlined style={iconStyle} />
+        <p>SmileOutlined</p>
+      </span>
     </Card.Grid>
   ),
   HomeOutlined: (
     <Card.Grid style={gridStyle}>
-      <SmileOutlined />
+      <HomeOutlined style={iconStyle} />
+      <p>SmileOutlined</p>
     </Card.Grid>
   ),
   PicLeftOutlined: (
     <Card.Grid style={gridStyle}>
-      <SmileOutlined />
+      <PicLeftOutlined style={iconStyle} />
+      <p>PicLeftOutlined</p>
     </Card.Grid>
   ),
   SettingOutlined: (
     <Card.Grid style={gridStyle}>
-      <SmileOutlined />
+      <SettingOutlined style={iconStyle} />
+      <p>SettingOutlined</p>
     </Card.Grid>
   ),
 };
