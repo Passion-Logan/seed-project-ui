@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Select, Input, Radio, InputNumber, TreeSelect, Drawer } from 'antd';
 import { getTreeList } from '../service';
 import { SettingOutlined } from '@ant-design/icons';
+import IconList from './IconList';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -31,6 +32,7 @@ const AllForm = (props) => {
   });
 
   const [isMenuChildren, setIsMenuChildren] = useState(false);
+  const [iconVisible, handleIconVisible] = useState(false);
   const [treeNode, setTreeNode] = useState(() => {
     getTreeList().then((data) => {
       if (data.success) {
@@ -142,7 +144,16 @@ const AllForm = (props) => {
           <Input placeholder="没有可不填" />
         </FormItem>
         <FormItem name="icon" label="菜单图标">
-          <Input placeholder="点击右侧按钮选择图标" addonAfter={<SettingOutlined />} />
+          <Input
+            placeholder="点击右侧按钮选择图标"
+            addonAfter={
+              <SettingOutlined
+                onClick={() => {
+                  handleIconVisible(true);
+                }}
+              />
+            }
+          />
         </FormItem>
         <FormItem name="sort" label="排序">
           <InputNumber
@@ -186,8 +197,8 @@ const AllForm = (props) => {
   return (
     <Drawer
       width={550}
-      title='新增/编辑菜单'
-      placement='right'
+      title="新增/编辑菜单"
+      placement="right"
       closable={false}
       onClose={() => handleModalVisible()}
       visible={formModalVisible}
@@ -211,6 +222,12 @@ const AllForm = (props) => {
       >
         {renderContent()}
       </Form>
+      <IconList
+        cancle={() => {
+          handleIconVisible(false);
+        }}
+        visible={iconVisible}
+      />
     </Drawer>
   );
 };

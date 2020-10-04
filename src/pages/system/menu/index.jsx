@@ -1,10 +1,10 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Drawer, Form, Space, Spin, Tag } from 'antd';
+import React, { useState, useRef } from 'react';
+import { Button, Divider, Form, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { getMenuList, getTreeList } from './service';
+import { getMenuList } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
@@ -19,6 +19,7 @@ const Menu = () => {
 
   const [modalVisible, handleModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
+
 
   const columns = [
     {
@@ -145,19 +146,6 @@ const Menu = () => {
         columns={columns}
         rowSelection={{}}
       />
-
-      {/* {stepFormValues && Object.keys(stepFormValues).length ? (
-        <Drawer
-          title="Create a new account"
-          width={720}
-          placement='right'
-          closable={false}
-          onClose={() => handleModalVisible(false)}
-          visible={modalVisible}
-        >
-          <p>123</p>
-        </Drawer>
-      ) : null} */}
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
           <AllForm
