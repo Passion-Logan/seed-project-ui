@@ -70,7 +70,7 @@ const AllForm = (props) => {
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
-    
+
     handleAddOrUpdate({ ...formVals, ...fieldsValue });
   };
 
@@ -82,7 +82,8 @@ const AllForm = (props) => {
         </FormItem>
         <FormItem name="type" label="菜单类型">
           <RadioGroup>
-            <Radio disabled={formVals.type == 2} onClick={() => setIsMenuChildren(false)} value={1}>
+          {/* disabled={formVals.type == 2} */}
+            <Radio onClick={() => setIsMenuChildren(false)} value={1}>
               目录
             </Radio>
             <Radio onClick={() => setIsMenuChildren(true)} value={2}>

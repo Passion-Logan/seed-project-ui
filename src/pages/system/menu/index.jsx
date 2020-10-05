@@ -1,25 +1,68 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useRef } from 'react';
-import { Button, Divider, Form, Tag } from 'antd';
+import { Button, Divider, message, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { getMenuList } from './service';
+import { addMenu, getMenuList, updateMenu, removeMenu } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
-const handleAdd = async (fields) => {};
+const handleAdd = async (fields) => {
+  const hide = message.loading('正在添加');
 
-const handleUpdate = async (fields) => {};
+  try {
+    if (fields.type == 1) {
+      fields.pid = '0';
+    }
+    await addMenu({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
+
+const handleUpdate = async (fields) => {
+  const hide = message.loading('正在修改');
+
+  try {
+    if (fields.type == 1) {
+      fields.pid = '0';
+    }
+    await updateMenu({ ...fields });
+    hide();
+    message.success('修改成功');
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
+
+const handleRemove = async (selectedRowKeys) => {
+  const hide = message.loading('正在删除');
+  if (!selectedRowKeys) return true;
+
+  try {
+    await removeMenu({
+      ids: selectedRowKeys,
+    });
+    hide();
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
 
 const Menu = () => {
-  const FormItem = Form.Item;
-  const [form] = Form.useForm();
   const actionRef = useRef();
 
   const [modalVisible, handleModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
-
 
   const columns = [
     {
@@ -67,6 +110,12 @@ const Menu = () => {
     {
       title: '排序',
       dataIndex: 'sort',
+      rules: [
+        {
+          required: true,
+          message: '排序为必填项',
+        },
+      ],
     },
     {
       title: '是否可见菜单',
@@ -97,14 +146,6 @@ const Menu = () => {
             编辑
           </a>
           <Divider type="vertical" />
-          <a
-            onClick={() => {
-              handleUpdatePwdVisible(true);
-              setPwdValues(record);
-            }}
-          >
-            删除
-          </a>
         </>
       ),
     },
@@ -115,7 +156,7 @@ const Menu = () => {
       <ProTable
         search={false}
         actionRef={actionRef}
-        rowKey="id"
+        rowKey={(row) => row.id}
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
           <Button
             type="primary"
@@ -124,8 +165,10 @@ const Menu = () => {
               setStepFormValues({
                 id: null,
                 menu: '',
+                pid: '0',
                 componentName: '',
                 path: '',
+                sort: 1,
                 redirect: '',
                 icon: '',
                 isFrame: false,
@@ -137,7 +180,14 @@ const Menu = () => {
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
-            <Button key="removes" selectedKeys={[]}>
+            <Button
+              onClick={() => {
+                const success = handleRemove(selectedRowKeys.join(','));
+                if (success) {
+                  action.reload();
+                }
+              }}
+            >
               批量删除
             </Button>
           ),
@@ -148,34 +198,34 @@ const Menu = () => {
       />
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
-          <AllForm
-            onSubmit={async (value) => {
-              let success;
+        <AllForm
+          onSubmit={async (value) => {
+            let success;
 
-              if (isEmpty(value.id)) {
-                success = await handleAdd(value);
-              } else {
-                success = await handleUpdate(value);
-              }
+            if (isEmpty(value.id)) {
+              success = await handleAdd(value);
+            } else {
+              success = await handleUpdate(value);
+            }
 
-              if (success) {
-                handleModalVisible(false);
-                setStepFormValues({});
-
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                }
-              }
-            }}
-            onClose={() => {
+            if (success) {
               handleModalVisible(false);
-              setTimeout(() => {
-                setStepFormValues({});
-              }, 300)
-            }}
-            formModalVisible={modalVisible}
-            values={stepFormValues}
-          />
+              setStepFormValues({});
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onClose={() => {
+            handleModalVisible(false);
+            setTimeout(() => {
+              setStepFormValues({});
+            }, 300);
+          }}
+          formModalVisible={modalVisible}
+          values={stepFormValues}
+        />
       ) : null}
     </PageHeaderWrapper>
   );
