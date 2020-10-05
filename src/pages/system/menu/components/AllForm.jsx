@@ -70,8 +70,8 @@ const AllForm = (props) => {
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
-
-    handleUpdate({ ...formVals, ...fieldsValue });
+    
+    handleAddOrUpdate({ ...formVals, ...fieldsValue });
   };
 
   const renderContent = () => {

@@ -3,12 +3,12 @@ export default {
     menuData: [
       {
         path: '/',
-        icon: 'smile',
+        icon: 'SmileOutlined',
         redirect: '/welcome',
       },
       {
         path: '/user',
-        icon: 'smile',
+        icon: 'SmileOutlined',
         children: [
           {
             name: 'login',
@@ -19,41 +19,41 @@ export default {
       {
         path: '/welcome',
         hideInMenu: true,
-        icon: 'smile',
+        icon: 'SmileOutlined',
         name: 'welcome',
       },
       {
         path: '/admin',
-        icon: 'smile',
+        icon: 'SmileOutlined',
         name: 'admin',
         children: [
           {
             path: '/admin/sub-page',
-            icon: 'smile',
+            icon: 'SmileOutlined',
             name: 'sub-page',
           }
         ]
       },
       {
         name: 'list.table-list',
-        icon: 'smile',
+        icon: 'SmileOutlined',
         path: '/list',
       },
       {
         path: '/test',
-        icon: 'smile',
+        icon: 'smSmileOutlinedile',
         name: 'test',
         children: [
           {
             path: '/test/sub-test',
-            icon: 'smile',
+            icon: 'SmileOutlined',
             name: 'sub-test',
           }
         ]
       },
       {
         name: 'system',
-        icon: 'setting',
+        icon: 'SettingOutlined',
         path: '/system',
         children: [
           {
