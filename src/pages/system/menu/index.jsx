@@ -8,6 +8,10 @@ import { addMenu, getMenuList, updateMenu, removeMenu } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
+/**
+ * 新增
+ * @param {*} fields 
+ */
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
