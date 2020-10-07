@@ -9,7 +9,7 @@ import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
 /**
- * 新增
+ * 新增方法
  * @param {*} fields 
  */
 const handleAdd = async (fields) => {
@@ -29,6 +29,11 @@ const handleAdd = async (fields) => {
   }
 };
 
+/**
+ * todo: 测试
+ * 更新菜单
+ * @param {*} fields 
+ */
 const handleUpdate = async (fields) => {
   const hide = message.loading('正在修改');
 
