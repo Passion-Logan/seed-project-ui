@@ -26,6 +26,7 @@ const AllForm = (props) => {
     path: props.values.path,
     redirect: props.values.redirect,
     icon: props.values.icon,
+    pid: props.values.pid == 0 ? null : props.values.pid,
     sort: props.values.sort,
     isFrame: props.values.isFrame,
     visible: props.values.hideInMenu,
@@ -82,7 +83,6 @@ const AllForm = (props) => {
         </FormItem>
         <FormItem name="type" label="菜单类型">
           <RadioGroup>
-          {/* disabled={formVals.type == 2} */}
             <Radio onClick={() => setIsMenuChildren(false)} value={1}>
               目录
             </Radio>
@@ -106,7 +106,7 @@ const AllForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
-        {isMenuChildren ? (
+        {isMenuChildren || formVals.type == 2 ? (
           <FormItem name="pid" label="上级菜单">
             <TreeSelect
               treeDataSimpleMode
@@ -219,6 +219,7 @@ const AllForm = (props) => {
           sort: formVals.sort,
           isFrame: formVals.isFrame,
           visible: formVals.visible,
+          pid: formVals.pid,
         }}
       >
         {renderContent()}
