@@ -30,7 +30,6 @@ const handleAdd = async (fields) => {
 };
 
 /**
- * todo: 测试
  * 更新菜单
  * @param {*} fields 
  */
