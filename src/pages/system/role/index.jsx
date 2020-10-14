@@ -1,12 +1,30 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useRef } from 'react';
-import { Button, Divider, Spin, Tag } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Button, Divider, message, Spin, Tag } from 'antd';
 import styles from './index.less';
-import ProTable from '@ant-design/pro-table';
+import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { queryRole } from './service';
+import { addRole, queryRole } from './service';
+import CreateForm from './components/CreateForm';
+
+const handleAdd = async (fields) => {
+  const hide = message.loading('正在添加');
+
+  try {
+    await addRole({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
 
 const Role = () => {
+  const [createModalVisible, handleModalVisible] = useState(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef();
 
   const columns = [
@@ -24,33 +42,30 @@ const Role = () => {
     {
       title: '角色名称',
       dataIndex: 'roleName',
+      rules: [
+        {
+          required: true,
+          message: '角色名称为必填项',
+        },
+      ],
     },
     {
       title: '备注',
       hideInSearch: true,
       dataIndex: 'remark',
+      valueType: 'textarea',
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       hideInSearch: true,
-      rules: [
-        {
-          required: true,
-          message: '菜单路径为必填项',
-        },
-      ],
+      hideInForm: true,
     },
     {
       title: '创建人',
       dataIndex: 'createBy',
       hideInSearch: true,
-      rules: [
-        {
-          required: true,
-          message: '排序为必填项',
-        },
-      ],
+      hideInForm: true,
     },
     {
       title: '操作',
@@ -67,6 +82,14 @@ const Role = () => {
             编辑
           </a>
           <Divider type="vertical" />
+          <TableDropdown
+            key="actionGroup"
+            onSelect={(key) => message.info(key)}
+            menus={[
+              {key: 'authority', name: '授权'},
+              {key: 'delete', name: '删除'},
+            ]}
+           />
         </>
       ),
     },
@@ -78,7 +101,7 @@ const Role = () => {
         actionRef={actionRef}
         rowKey={(row) => row.id}
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-          <Button>
+          <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && <Button>批量删除</Button>,
@@ -86,7 +109,27 @@ const Role = () => {
         request={(params, sorter, filter) => queryRole({ ...params, sorter, filter })}
         columns={columns}
         rowSelection={{}}
-      ></ProTable>
+      />
+
+      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
+        <ProTable
+          onSubmit={async (value) => {
+            const success = await handleAdd(value);
+
+            if (success) {
+              handleModalVisible(false);
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          rowKey="key"
+          type="form"
+          columns={columns}
+          rowSelection={{}}
+        />
+      </CreateForm>
     </PageHeaderWrapper>
   );
 };
