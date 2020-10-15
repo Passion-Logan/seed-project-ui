@@ -46,7 +46,6 @@ const AllForm = (props) => {
     onSubmit: handleAddOrUpdate,
     onClose: handleModalVisible,
     formModalVisible,
-    values,
   } = props;
 
   const genTreeNode = (dataList) => {

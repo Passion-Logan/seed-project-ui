@@ -24,8 +24,18 @@ export async function updateRole(params) {
     data: { ...params },
   });
 }
-// export async function updatePassword(params) {
-//   return request('/api/sys/user/updatePassword', {
-//     params,
-//   });
-// }
+export async function getTreeList() {
+  return request('/api/sys/role/queryTreeList');
+}
+export async function getRolePermission(params) {
+  return request('/api/sys/menu/queryRolePermission', {
+    params,
+  });
+}
+export async function updateRolePermission(params) {
+  return request('/api/sys/role/saveRolePermission', {
+    method: 'PUT',
+    data: { ...params },
+  });
+}
+

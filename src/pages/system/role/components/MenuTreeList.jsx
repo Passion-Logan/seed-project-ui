@@ -1,9 +1,65 @@
-import { Button, Drawer } from 'antd';
+import { Button, Drawer, Tree } from 'antd';
+import { useState } from 'react';
+import { getTreeList, getRolePermission } from '../service';
 
 const TreeMenuList = (props) => {
-  const { onSubmit: xxxx, onClose: handleUpdateAuthModal, authModal, values } = props;
+  const { onSubmit: handleRolePermission, onClose: handleUpdateAuthModal, authModal } = props;
 
-  const handleNext = async () => {};
+  const [updateValue, setUpdateValue] = useState({});
+
+  const [roleId, setRoleId] = useState(props.values.id);
+
+  const [expandedKeys, setExpandedKeys] = useState([]);
+
+  const [rolePermission, setRolePermission] = useState(() => {
+    getRolePermission({ roleId: roleId }).then((data) => {
+      if (data.success) {
+        setRolePermission(data.data);
+      }
+    });
+  });
+
+  const [treeData, setTreeData] = useState(() => {
+    getTreeList().then((data) => {
+      if (data.success) {
+        setTreeData(genTreeNode(data.data.treeList));
+        let keys = [];
+        data.data.treeList.map((item) => keys.push(item.key));
+        setExpandedKeys(keys);
+      }
+    });
+  });
+
+  const genTreeNode = (dataList) => {
+    let data = [];
+
+    if (dataList.length != null) {
+      dataList.map((item) => {
+        data.push({
+          key: item.value,
+          pId: item.pid,
+          value: item.value,
+          title: item.title,
+          isLeaf: !(item.pid == '0'),
+          children: item.children != null ? genTreeNode(item.children) : [],
+        });
+      });
+    }
+
+    return data;
+  };
+
+  const handleNext = () => {
+    handleRolePermission(updateValue);
+  };
+
+  const onSelect = (checkedKeys, info) => {
+    console.log('onSelect ', updateValue);
+  };
+
+  const onCheck = (checkedKeys, info) => {
+    setUpdateValue({ roleId: roleId, permissionIds: checkedKeys.checked.join(',') });
+  };
 
   const renderFooter = () => {
     return (
@@ -29,7 +85,17 @@ const TreeMenuList = (props) => {
       onClose={() => handleUpdateAuthModal()}
       visible={authModal}
       footer={renderFooter()}
-    ></Drawer>
+    >
+      <Tree
+        checkable
+        checkStrictly
+        defaultSelectedKeys={rolePermission}
+        expandedKeys={expandedKeys}
+        onSelect={onSelect}
+        onCheck={onCheck}
+        treeData={treeData}
+      />
+    </Drawer>
   );
 };
 

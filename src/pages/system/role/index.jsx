@@ -4,7 +4,7 @@ import { Button, Divider, message, Spin, Tag } from 'antd';
 import styles from './index.less';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { addRole, queryRole, removeRole, updateRole } from './service';
+import { addRole, queryRole, removeRole, updateRole, updateRolePermission } from './service';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import TreeMenuList from './components/MenuTreeList';
@@ -48,6 +48,21 @@ const handleRemove = async (selectedRowKeys) => {
     });
 
     hide();
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
+
+const handleRolePermission = async (value) => {
+  const hide = message.loading('正在修改权限');
+  console.log(value);
+
+  try {
+    await updateRolePermission({ ...value });
+    hide();
+    message.success('修改成功');
     return true;
   } catch (error) {
     hide();
@@ -213,15 +228,23 @@ const Role = () => {
       {roleMenuValues && Object.keys(roleMenuValues).length ? (
         <TreeMenuList
           onSubmit={async (value) => {
-            let success;
-
-            success = await handleUpdate(value);
+            const success = await handleRolePermission(value);
 
             if (success) {
               handleUpdateAuthModal(false);
+              setRoleMenuValues({});
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
             }
           }}
-          onClose={() => handleUpdateAuthModal(false)}
+          onClose={() => {
+            handleUpdateAuthModal(false);
+            setTimeout(() => {
+              setRoleMenuValues({});
+            }, 300);
+          }}
           authModal={updateAuthModal}
           values={roleMenuValues}
         />
