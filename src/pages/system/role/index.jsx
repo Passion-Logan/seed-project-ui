@@ -4,8 +4,10 @@ import { Button, Divider, message, Spin, Tag } from 'antd';
 import styles from './index.less';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { addRole, queryRole } from './service';
+import { addRole, queryRole, removeRole, updateRole } from './service';
 import CreateForm from './components/CreateForm';
+import UpdateForm from './components/UpdateForm';
+import TreeMenuList from './components/MenuTreeList';
 
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
@@ -21,10 +23,44 @@ const handleAdd = async (fields) => {
   }
 };
 
+const handleUpdate = async (fields) => {
+  const hide = message.loading('正在修改');
+
+  try {
+    await updateRole({ ...fields });
+    hide();
+    message.success('修改成功');
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
+
+const handleRemove = async (selectedRowKeys) => {
+  const hide = message.loading('正在删除');
+
+  if (!selectedRowKeys) return true;
+
+  try {
+    await removeRole({
+      ids: selectedRowKeys,
+    });
+
+    hide();
+    return true;
+  } catch (error) {
+    hide();
+    return false;
+  }
+};
+
 const Role = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [updateAuthModal, handleUpdateAuthModal] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
+  const [roleMenuValues, setRoleMenuValues] = useState({});
   const actionRef = useRef();
 
   const columns = [
@@ -71,12 +107,12 @@ const Role = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => (
+      render: (text, row, _, action) => (
         <>
           <a
             onClick={() => {
-              handleModalVisible(true);
-              setStepFormValues(record);
+              handleUpdateModalVisible(true);
+              setStepFormValues(row);
             }}
           >
             编辑
@@ -84,12 +120,21 @@ const Role = () => {
           <Divider type="vertical" />
           <TableDropdown
             key="actionGroup"
-            onSelect={(key) => message.info(key)}
+            onSelect={(key) => {
+              if (key == 'authority') {
+                handleUpdateAuthModal(true);
+                setRoleMenuValues({ id: row.id });
+              }
+              if (key == 'delete') {
+                handleRemove(row.id);
+                action.current.reload();
+              }
+            }}
             menus={[
-              {key: 'authority', name: '授权'},
-              {key: 'delete', name: '删除'},
+              { key: 'authority', name: '授权' },
+              { key: 'delete', name: '删除' },
             ]}
-           />
+          />
         </>
       ),
     },
@@ -104,7 +149,18 @@ const Role = () => {
           <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
-          selectedRows && selectedRows.length > 0 && <Button>批量删除</Button>,
+          selectedRows && selectedRows.length > 0 && (
+            <Button
+              key="remove"
+              onClick={async () => {
+                await handleRemove(selectedRowKeys.join(','));
+                action.reload();
+              }}
+              selectedKeys={[]}
+            >
+              批量删除
+            </Button>
+          ),
         ]}
         request={(params, sorter, filter) => queryRole({ ...params, sorter, filter })}
         columns={columns}
@@ -130,6 +186,46 @@ const Role = () => {
           rowSelection={{}}
         />
       </CreateForm>
+
+      {stepFormValues && Object.keys(stepFormValues).length ? (
+        <UpdateForm
+          onSubmit={async (value) => {
+            const success = await handleUpdate(value);
+
+            if (success) {
+              handleUpdateModalVisible(false);
+              setStepFormValues({});
+
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onCancel={() => {
+            handleUpdateModalVisible(false);
+            setStepFormValues({});
+          }}
+          updateModalVisible={updateModalVisible}
+          values={stepFormValues}
+        />
+      ) : null}
+
+      {roleMenuValues && Object.keys(roleMenuValues).length ? (
+        <TreeMenuList
+          onSubmit={async (value) => {
+            let success;
+
+            success = await handleUpdate(value);
+
+            if (success) {
+              handleUpdateAuthModal(false);
+            }
+          }}
+          onClose={() => handleUpdateAuthModal(false)}
+          authModal={updateAuthModal}
+          values={roleMenuValues}
+        />
+      ) : null}
     </PageHeaderWrapper>
   );
 };
