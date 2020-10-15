@@ -54,7 +54,8 @@ const TreeMenuList = (props) => {
   };
 
   const onSelect = (checkedKeys, info) => {
-    console.log('onSelect ', updateValue);
+    rolePermission
+    console.log('onSelect ', rolePermission);
   };
 
   const onCheck = (checkedKeys, info) => {
@@ -89,7 +90,7 @@ const TreeMenuList = (props) => {
       <Tree
         checkable
         checkStrictly
-        defaultSelectedKeys={rolePermission}
+        defaultCheckedKeys={rolePermission}
         expandedKeys={expandedKeys}
         onSelect={onSelect}
         onCheck={onCheck}
