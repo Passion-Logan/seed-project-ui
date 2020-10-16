@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request from '@/utils/request';
 
 export async function getMenuList() {
   return request('/api/sys/menu/list');
@@ -12,6 +12,12 @@ export async function removeMenu(params) {
   return request('/api/sys/menu/removeMenu', {
     method: 'DELETE',
     data: { ...params },
+  });
+}
+
+export async function deleteMenu(id) {
+  return request('/api/sys/menu/deleteMenu?id=' + id, {
+    method: 'DELETE'
   });
 }
 

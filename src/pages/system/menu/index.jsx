@@ -4,13 +4,13 @@ import { Button, Divider, message, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { addMenu, getMenuList, updateMenu, removeMenu } from './service';
+import { addMenu, getMenuList, updateMenu, removeMenu, deleteMenu } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
 
 /**
  * 新增方法
- * @param {*} fields 
+ * @param {*} fields
  */
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
@@ -31,7 +31,7 @@ const handleAdd = async (fields) => {
 
 /**
  * 更新菜单
- * @param {*} fields 
+ * @param {*} fields
  */
 const handleUpdate = async (fields) => {
   const hide = message.loading('正在修改');
@@ -64,6 +64,15 @@ const handleRemove = async (selectedRowKeys) => {
     hide();
     return false;
   }
+};
+
+const handleRemoveById = async (id) => {
+  const hide = message.loading('正在删除');
+  if (!id) return true;
+
+  const result = await deleteMenu(id);
+  hide();
+  return result.success;
 };
 
 const Menu = () => {
@@ -154,6 +163,17 @@ const Menu = () => {
             编辑
           </a>
           <Divider type="vertical" />
+          <a
+            onClick={async () => {
+              const success = await handleRemoveById(record.id);
+              console.log(success);
+              if (success) {
+                actionRef.current.reload();
+              }
+            }}
+          >
+            删除
+          </a>
         </>
       ),
     },
@@ -187,7 +207,7 @@ const Menu = () => {
           >
             <PlusOutlined /> 新建
           </Button>,
-          selectedRows && selectedRows.length > 0 && (
+          selectedRowKeys.length > 0 && (
             <Button
               onClick={() => {
                 const success = handleRemove(selectedRowKeys.join(','));
