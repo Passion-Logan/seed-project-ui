@@ -5,7 +5,7 @@ export async function getMenuList() {
 }
 
 export async function getTreeList() {
-  return request('/api/sys/role/queryTreeList');
+  return request('/api/sys/menu/queryTreeList');
 }
 
 export async function removeMenu(params) {

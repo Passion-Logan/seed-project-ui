@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Radio } from 'antd';
+import { Form, Button, Modal, Select, Input, Radio, TreeSelect } from 'antd';
+import { getAllRole } from '../service';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -37,6 +38,28 @@ const UpdateForm = (props) => {
     setFormVals({ ...formVals, ...fieldsValue });
 
     handleUpdate({ ...formVals, ...fieldsValue });
+  };
+
+  const [children, setChildren] = useState(() => {
+    getAllRole().then((data) => {
+      const result = [];
+
+      if (data.success) {
+        data.data.map((item) => {
+          result.push(
+            <Option key={item.id} value={item.id}>
+              {item.roleName}
+            </Option>,
+          );
+        });
+      }
+      setChildren(result);
+      console.log(result);
+    });
+  });
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
   };
 
   const renderContent = () => {
@@ -78,6 +101,17 @@ const UpdateForm = (props) => {
           ]}
         >
           <Input placeholder="请输入" />
+        </FormItem>
+        <FormItem name="roleId" label="角色">
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="请选择"
+            onChange={handleChange}
+          >
+            {children}
+          </Select>
         </FormItem>
         <FormItem name="sex" label="性别">
           <Select

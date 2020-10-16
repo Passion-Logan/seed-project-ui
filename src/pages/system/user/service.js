@@ -29,3 +29,6 @@ export async function updatePassword(params) {
     params,
   });
 }
+export async function getAllRole() {
+  return request('/api/sys/role/getAllList');
+}
