@@ -11,19 +11,11 @@ const TreeMenuList = (props) => {
 
   const [expandedKeys, setExpandedKeys] = useState([]);
 
-  const [rolePermission, setRolePermission] = useState(() => {
-    getRolePermission({ roleId: roleId }).then((data) => {
-      if (data.success) {
-        setRolePermission(data.data);
-      }
-    });
-  });
-
   const [treeData, setTreeData] = useState(() => {
     getTreeList().then((data) => {
       if (data.success) {
         setTreeData(genTreeNode(data.data.treeList));
-        let keys = [];
+        const keys = [];
         data.data.treeList.map((item) => keys.push(item.key));
         setExpandedKeys(keys);
       }
@@ -49,16 +41,26 @@ const TreeMenuList = (props) => {
     return data;
   };
 
+  const [rolePermission, setRolePermission] = useState(() => {
+    getRolePermission({ roleId: roleId }).then((result) => {
+      if (result.success) {
+        setRolePermission(result.data);
+      }
+    });
+  });
+
   const handleNext = () => {
     handleRolePermission(updateValue);
   };
 
   const onSelect = (checkedKeys, info) => {
-    rolePermission
     console.log('onSelect ', rolePermission);
+
+    console.log('treeData ', treeData);
   };
 
   const onCheck = (checkedKeys, info) => {
+    setRolePermission(checkedKeys.checked)
     setUpdateValue({ roleId: roleId, permissionIds: checkedKeys.checked.join(',') });
   };
 
@@ -90,7 +92,7 @@ const TreeMenuList = (props) => {
       <Tree
         checkable
         checkStrictly
-        defaultCheckedKeys={rolePermission}
+        checkedKeys={rolePermission}
         expandedKeys={expandedKeys}
         onSelect={onSelect}
         onCheck={onCheck}
