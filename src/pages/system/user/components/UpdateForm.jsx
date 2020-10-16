@@ -22,6 +22,7 @@ const UpdateForm = (props) => {
     nickName: props.values.nickName,
     sex: props.values.sex,
     email: props.values.email,
+    roleIds: "",
     enabled: props.values.enabled.toString(),
   });
 
@@ -54,12 +55,11 @@ const UpdateForm = (props) => {
         });
       }
       setChildren(result);
-      console.log(result);
     });
   });
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    console.log(value.join(','));
   };
 
   const renderContent = () => {
@@ -102,7 +102,7 @@ const UpdateForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
-        <FormItem name="roleId" label="角色">
+        <FormItem name="roleIds" label="角色">
           <Select
             mode="multiple"
             allowClear

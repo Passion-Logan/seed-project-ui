@@ -34,6 +34,10 @@ const handleAdd = async (fields) => {
 const handleUpdate = async (fields) => {
   const hide = message.loading('正在修改');
 
+  if (fields.roleIds != "") {
+    fields.roleIds = fields.roleIds.join(',')
+  }
+
   try {
     await updateUser({ ...fields });
     hide();
