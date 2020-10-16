@@ -32,3 +32,6 @@ export async function updatePassword(params) {
 export async function getAllRole() {
   return request('/api/sys/role/getAllList');
 }
+export async function queryUserRole(userId) {
+  return request('/api/sys/user/getUserRole?userId=' + userId);
+}

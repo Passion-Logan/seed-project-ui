@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Modal, Select, Input, Radio, TreeSelect } from 'antd';
-import { getAllRole } from '../service';
+import { getAllRole, queryUserRole } from '../service';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -22,7 +22,7 @@ const UpdateForm = (props) => {
     nickName: props.values.nickName,
     sex: props.values.sex,
     email: props.values.email,
-    roleIds: "",
+    roleIds: [],
     enabled: props.values.enabled.toString(),
   });
 
@@ -34,16 +34,20 @@ const UpdateForm = (props) => {
     values,
   } = props;
 
-  const handleNext = async () => {
-    const fieldsValue = await form.validateFields();
-    setFormVals({ ...formVals, ...fieldsValue });
+  const [userRoles, setUserRoles] = useState(() => {
+    queryUserRole(props.values.id).then((data) => {
+      let result = [];
 
-    handleUpdate({ ...formVals, ...fieldsValue });
-  };
+      if (data.success) {
+        result = data.data;
+      }
+      setUserRoles(result);
+    });
+  });
 
   const [children, setChildren] = useState(() => {
     getAllRole().then((data) => {
-      const result = [];
+      let result = [];
 
       if (data.success) {
         data.data.map((item) => {
@@ -58,7 +62,15 @@ const UpdateForm = (props) => {
     });
   });
 
+  const handleNext = async () => {
+    const fieldsValue = await form.validateFields();
+    setFormVals({ ...formVals, ...fieldsValue });
+
+    handleUpdate({ ...formVals, ...fieldsValue });
+  };
+
   const handleChange = (value) => {
+    console.log(userRoles);
     console.log(value.join(','));
   };
 
@@ -108,6 +120,7 @@ const UpdateForm = (props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="请选择"
+            // value={userRoles}
             onChange={handleChange}
           >
             {children}
@@ -177,6 +190,7 @@ const UpdateForm = (props) => {
           nickName: formVals.nickName,
           sex: formVals.sex,
           email: formVals.email,
+          roleIds: userRoles,
           enabled: formVals.enabled,
         }}
       >
