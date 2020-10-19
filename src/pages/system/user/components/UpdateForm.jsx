@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Radio, TreeSelect } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Button, Modal, Select, Input, Radio } from 'antd';
 import { getAllRole, queryUserRole } from '../service';
 
 const FormItem = Form.Item;
@@ -34,33 +34,7 @@ const UpdateForm = (props) => {
     values,
   } = props;
 
-  const [userRoles, setUserRoles] = useState(() => {
-    queryUserRole(props.values.id).then((data) => {
-      let result = [];
-
-      if (data.success) {
-        result = data.data;
-      }
-      setUserRoles(result);
-    });
-  });
-
-  const [children, setChildren] = useState(() => {
-    getAllRole().then((data) => {
-      let result = [];
-
-      if (data.success) {
-        data.data.map((item) => {
-          result.push(
-            <Option key={item.id} value={item.id}>
-              {item.roleName}
-            </Option>,
-          );
-        });
-      }
-      setChildren(result);
-    });
-  });
+  const [children, setChildren] = useState([]);
 
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
@@ -70,7 +44,6 @@ const UpdateForm = (props) => {
   };
 
   const handleChange = (value) => {
-    console.log(userRoles);
     console.log(value.join(','));
   };
 
@@ -120,7 +93,6 @@ const UpdateForm = (props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="请选择"
-            // value={userRoles}
             onChange={handleChange}
           >
             {children}
@@ -169,6 +141,35 @@ const UpdateForm = (props) => {
     );
   };
 
+  useEffect(() => {
+    const getUserRole = async () => {
+      const userRoleData = await queryUserRole(props.values.id);
+
+      if (userRoleData.success) {
+        form.setFieldsValue({ roleIds: userRoleData.data });
+      }
+    };
+
+    const getChildren = async () => {
+      const childrenData = await getAllRole();
+      let result = [];
+
+      if (childrenData.success) {
+        childrenData.data.map((item) => {
+          result.push(
+            <Option key={item.id} value={item.id}>
+              {item.roleName}
+            </Option>,
+          );
+        });
+      }
+      setChildren(result);
+    };
+
+    getChildren();
+    getUserRole();
+  }, []);
+
   return (
     <Modal
       width={640}
@@ -190,7 +191,6 @@ const UpdateForm = (props) => {
           nickName: formVals.nickName,
           sex: formVals.sex,
           email: formVals.email,
-          roleIds: userRoles,
           enabled: formVals.enabled,
         }}
       >
