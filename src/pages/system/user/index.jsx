@@ -10,38 +10,32 @@ import UpdateForm from './components/UpdateForm';
 import Modal from 'antd/lib/modal/Modal';
 
 /**
- * 添加用户
- * @param {用户实体} fields
- */
-const handleAdd = async (fields) => {
-  const hide = message.loading('正在添加');
-
-  try {
-    await addUser({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    return false;
-  }
-};
-
-/**
- * 修改用户
+ * 修改/添加用户
  * @param {用户实体} fields
  */
 const handleUpdate = async (fields) => {
-  const hide = message.loading('正在修改');
+  let msg = '添加';
+  let flag = true;
+  if (fields.id != null) {
+    msg = '修改';
+    flag = false;
+  }
+  const hide = message.loading('正在' + msg);
 
-  if (fields.roleIds != "") {
-    fields.roleIds = fields.roleIds.join(',')
+  if (fields.roleIds.length != 0) {
+    fields.roleIds = fields.roleIds.join(',');
+  } else {
+    fields.roleIds = null;
   }
 
   try {
-    await updateUser({ ...fields });
+    if (flag) {
+      await addUser({ ...fields });
+    } else {
+      await updateUser({ ...fields });
+    }
     hide();
-    message.success('修改成功');
+    message.success(msg + '成功');
     return true;
   } catch (error) {
     hide();
@@ -98,7 +92,6 @@ const formLayout = {
 const User = () => {
   const FormItem = Form.Item;
   const [form] = Form.useForm();
-  const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [updatePwdVisible, handleUpdatePwdVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -160,7 +153,7 @@ const User = () => {
         },
         true: {
           text: '开启',
-          status: 'Success'
+          status: 'Success',
         },
       },
     },
@@ -212,7 +205,13 @@ const User = () => {
         actionRef={actionRef}
         rowKey={(row) => row.id}
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              handleUpdateModalVisible(true);
+              setStepFormValues({ id: null, sex: '1', enabled: 'true' });
+            }}
+          >
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
@@ -222,7 +221,6 @@ const User = () => {
                 await handleRemove(selectedRowKeys.join(','));
                 action.reload();
               }}
-              selectedKeys={[]}
             >
               批量删除
             </Button>
@@ -232,26 +230,6 @@ const User = () => {
         columns={columns}
         rowSelection={{}}
       />
-
-      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
-        <ProTable
-          onSubmit={async (value) => {
-            const success = await handleAdd(value);
-
-            if (success) {
-              handleModalVisible(false);
-
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          rowKey="key"
-          type="form"
-          columns={columns}
-          rowSelection={{}}
-        />
-      </CreateForm>
 
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm

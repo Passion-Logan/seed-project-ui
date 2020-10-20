@@ -25,7 +25,7 @@ export async function updateRole(params) {
   });
 }
 export async function getTreeList() {
-  return request('/api/sys/role/queryTreeList');
+  return request('/api/sys/menu/queryTreeList');
 }
 export async function getRolePermission(params) {
   return request('/api/sys/menu/queryRolePermission', {

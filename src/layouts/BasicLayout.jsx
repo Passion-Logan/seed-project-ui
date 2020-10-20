@@ -94,18 +94,21 @@ const BasicLayout = (props) => {
   /**
    * init variables
    */
-  const mappingIcon = menuData => {
-    const mappingMenu = menuData.map(item => ({
-      ...item,
-      icon: iconEnum[item.icon],
-      children: item.children ? mappingIcon(item.children) : [],
-    }));
+  const mappingIcon = (menuData) => {
+    const mappingMenu = [];
+    if (menuData.length > 0) {
+      mappingMenu = menuData.map((item) => ({
+        ...item,
+        icon: iconEnum[item.icon],
+        children: item.children ? mappingIcon(item.children) : [],
+      }));
+    }
     return mappingMenu;
-  }
+  };
 
   const menuDataRender = () => {
     if (!isUndefined(menuList)) {
-      return mappingIcon(menuList)
+      return mappingIcon(menuList);
     }
   };
 

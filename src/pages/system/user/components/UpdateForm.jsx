@@ -50,17 +50,7 @@ const UpdateForm = (props) => {
   const renderContent = () => {
     return (
       <>
-        <FormItem
-          hidden
-          name="id"
-          label="主键"
-          rules={[
-            {
-              required: true,
-              message: '主键不能为空',
-            },
-          ]}
-        >
+        <FormItem hidden name="id" label="主键">
           <Input placeholder="主键" />
         </FormItem>
         <FormItem
@@ -87,6 +77,15 @@ const UpdateForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
+        {formVals.id == null ? (
+          <FormItem
+            label="密码"
+            name="password"
+            rules={[{ required: true, message: '密码不能为空' }]}
+          >
+            <Input placeholder="请输入新密码" />
+          </FormItem>
+        ) : null}
         <FormItem name="roleIds" label="角色">
           <Select
             mode="multiple"
@@ -108,16 +107,7 @@ const UpdateForm = (props) => {
             <Option value="2">女</Option>
           </Select>
         </FormItem>
-        <FormItem
-          name="email"
-          label="邮箱"
-          rules={[
-            {
-              required: true,
-              message: '请输入邮箱',
-            },
-          ]}
-        >
+        <FormItem name="email" label="邮箱">
           <Input placeholder="请输入" />
         </FormItem>
         <FormItem name="enabled" label="状态">
