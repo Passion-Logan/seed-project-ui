@@ -95,7 +95,7 @@ const BasicLayout = (props) => {
    * init variables
    */
   const mappingIcon = (menuData) => {
-    const mappingMenu = [];
+    let mappingMenu = [];
     if (menuData.length > 0) {
       mappingMenu = menuData.map((item) => ({
         ...item,
