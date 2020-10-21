@@ -163,6 +163,7 @@ const BasicLayout = (props) => {
       }}
       // footerRender={() => defaultFooterDom}
       menuDataRender={menuDataRender}
+      // postMenuData={menuDataRender}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}
