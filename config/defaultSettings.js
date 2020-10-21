@@ -8,7 +8,7 @@ const proSettings = {
   fixSiderbar: false,
   colorWeak: false,
   menu: {
-    locale: true,
+    locale: false,
   },
   title: 'Seed Project',
   pwa: false,
