@@ -1,12 +1,13 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useRef } from 'react';
-import { Button, Divider, message, Tag } from 'antd';
+import { Button, Divider, message, Space, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { addMenu, getMenuList, updateMenu, removeMenu, deleteMenu } from './service';
 import AllForm from './components/AllForm';
 import { isEmpty } from 'lodash';
+import Icons from './components/Icon';
 
 /**
  * 新增方法
@@ -107,6 +108,7 @@ const Menu = () => {
       title: 'icon',
       hideInSearch: true,
       dataIndex: 'icon',
+      render: (_, record) => Icons[record.icon],
     },
     {
       title: '菜单名称',
