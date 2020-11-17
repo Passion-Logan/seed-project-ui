@@ -31,6 +31,7 @@ const UpdateForm = (props) => {
     onSubmit: handleUpdate,
     onCancel: handleUpdateModalVisible,
     updateModalVisible,
+    afterClose,
     values,
   } = props;
 
@@ -170,6 +171,7 @@ const UpdateForm = (props) => {
       title="修改用户"
       visible={updateModalVisible}
       footer={renderFooter()}
+      afterClose={afterClose}
       onCancel={() => handleUpdateModalVisible()}
     >
       <Form

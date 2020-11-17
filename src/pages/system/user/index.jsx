@@ -188,6 +188,9 @@ const User = () => {
             onClick={() => {
               handleUpdatePwdVisible(true);
               setPwdValues(record);
+              form.setFieldsValue({
+                userName: record.userName,
+              });
             }}
           >
             修改密码
@@ -238,7 +241,6 @@ const User = () => {
 
             if (success) {
               handleUpdateModalVisible(false);
-              setStepFormValues({});
 
               if (actionRef.current) {
                 actionRef.current.reload();
@@ -247,8 +249,8 @@ const User = () => {
           }}
           onCancel={() => {
             handleUpdateModalVisible(false);
-            setStepFormValues({});
           }}
+          afterClose={() => setStepFormValues({})}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
         />
@@ -272,10 +274,6 @@ const User = () => {
         <Form
           {...formLayout}
           form={form}
-          initialValues={{
-            userName: pwdValues.userName,
-            password: null,
-          }}
         >
           <FormItem label="账号" name="userName">
             <Input disabled />
