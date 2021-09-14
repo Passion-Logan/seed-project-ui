@@ -1,29 +1,15 @@
-import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
-import { Alert, Checkbox } from 'antd';
-import React, { useState } from 'react';
-import { Link, connect } from 'umi';
-import LoginForm from './components/Login';
+import { InsuranceOutlined, LockTwoTone, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Row, Col, message } from 'antd';
+import React, { useState, useCallback } from 'react';
+import { connect } from 'umi';
+import { getCaptcha } from '@/services/login';
 import styles from './style.less';
 
-const { Tab, UserName, Password, ImgCode, Mobile, Captcha, Submit } = LoginForm;
 
-const LoginMessage = ({ content }) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
 
 const Login = (props) => {
-  const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
-  const [autoLogin, setAutoLogin] = useState(false);
-  const [type, setType] = useState('account');
-
+  const [imgData, setImgData] = useState();
+  const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
     const { dispatch } = props;
@@ -33,100 +19,87 @@ const Login = (props) => {
     });
   };
 
+  const onGetVerification = useCallback(async () => {
+    const result = await getCaptcha();
+
+    if (result.code !== 200) {
+      message.success('获取验证码失败！');
+      return;
+    }
+
+    setImgData(result.data.img);
+    form.setFieldsValue({ uuid: result.data.uuid });
+  }, []);
+
   return (
     <div className={styles.main}>
-      <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
-        <Tab key="account" tab="账户密码登录">
-          {status === 'error' && loginType === 'account' && !submitting && (
-            <LoginMessage content="账户或密码错误（admin/ant.design）" />
-          )}
-          <UserName
-            name="username"
-            placeholder="用户名: admin or user"
-            rules={[
-              {
-                required: true,
-                message: '请输入用户名!',
-              },
-            ]}
-          />
-          <Password
-            name="password"
-            placeholder="密码: ant.design"
-            rules={[
-              {
-                required: true,
-                message: '请输入密码！',
-              },
-            ]}
-          />
-          <ImgCode
-            name="imgCode"
-            placeholder="请输入验证码"
-            rules={[
-              {
-                required: true,
-                message: '请输入验证码',
-              },
-            ]}
-          />
-        </Tab>
-        <Tab key="mobile" tab="手机号登录">
-          {status === 'error' && loginType === 'mobile' && !submitting && (
-            <LoginMessage content="验证码错误" />
-          )}
-          <Mobile
-            name="mobile"
-            placeholder="手机号"
-            rules={[
-              {
-                required: true,
-                message: '请输入手机号！',
-              },
-              {
-                pattern: /^1\d{10}$/,
-                message: '手机号格式错误！',
-              },
-            ]}
-          />
-          <Captcha
-            name="captcha"
-            placeholder="验证码"
-            countDown={120}
-            getCaptchaButtonText=""
-            getCaptchaSecondText="秒"
-            rules={[
-              {
-                required: true,
-                message: '请输入验证码！',
-              },
-            ]}
-          />
-        </Tab>
-        <div>
-          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
-            自动登录
-          </Checkbox>
-          <a
-            style={{
-              float: 'right',
-            }}
-          >
-            忘记密码
-          </a>
-        </div>
-        <Submit loading={submitting}>登录</Submit>
-        <div className={styles.other}>
-          其他登录方式
-          <AlipayCircleOutlined className={styles.icon} />
-          <TaobaoCircleOutlined className={styles.icon} />
-          <WeiboCircleOutlined className={styles.icon} />
-          <Link className={styles.register} to="/user/register">
-            注册账户
-          </Link>
-        </div>
-      </LoginForm>
-    </div>
+      <Form
+        form={form}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={handleSubmit}
+        autoComplete="off"
+      >
+
+        <Form.Item
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: '请输入账号!',
+            },
+          ]}
+        >
+          <Input size="large" placeholder="请输入账号" prefix={<UserOutlined className={styles.prefixIcon} style={{ color: '#1890ff' }} />} />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: '请输入密码!',
+            },
+          ]}
+        >
+          <Input size="large" placeholder="请输入密码" type="password" prefix={<LockTwoTone className={styles.prefixIcon} style={{ color: '#1890ff' }} />} />
+        </Form.Item>
+        <Form.Item
+          name="imgCode"
+          rules={[
+            {
+              required: true,
+              message: '请输入验证码!',
+            },
+          ]}
+        >
+
+          <Row gutter={8}>
+            <Col span={16}>
+              <Input size="large" placeholder="请输入验证码" prefix={<InsuranceOutlined className={styles.prefixIcon} style={{ color: '#1890ff' }} />} />
+            </Col>
+            <Col span={8}>
+              <img
+                src={imgData === undefined ? onGetVerification() : imgData}
+                style={{ width: '115px', height: '40px', display: 'block' }}
+                alt="验证码"
+                onClick={() => {
+                  onGetVerification();
+                }}
+              />
+            </Col>
+          </Row>
+        </Form.Item>
+        <Form.Item name="uuid" hidden>
+          <Input />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" size="large" htmlType="submit" className={styles.submit}>
+            登录
+          </Button>
+        </Form.Item>
+      </Form>
+    </div >
   );
 };
 
