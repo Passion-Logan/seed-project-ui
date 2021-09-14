@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Button, Select, Input, Radio, InputNumber, TreeSelect, Drawer } from 'antd';
+import { Form, Button, Input, Radio, InputNumber, TreeSelect, Drawer } from 'antd';
 import { getTreeList } from '../service';
 import { SettingOutlined } from '@ant-design/icons';
 import IconList from './IconList';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 const RadioGroup = Radio.Group;
 
 const formLayout = {
@@ -26,11 +25,31 @@ const AllForm = (props) => {
     path: props.values.path,
     redirect: props.values.redirect,
     icon: props.values.icon,
-    pid: props.values.pid == 0 ? null : props.values.pid,
+    pid: props.values.pid === 0 ? null : props.values.pid,
     sort: props.values.sort,
     isFrame: props.values.isFrame,
     visible: props.values.hideInMenu,
   });
+
+  const genTreeNode = (dataList) => {
+    const data = [];
+
+    if (dataList.length != null) {
+      dataList.map((item) => {
+        data.push({
+          key: item.value,
+          pId: item.pid,
+          value: item.value,
+          title: item.title,
+          isLeaf: !(item.pid === '0'),
+          children: item.children != null ? genTreeNode(item.children) : [],
+        });
+        return item;
+      });
+    }
+
+    return data;
+  };
 
   const [isMenuChildren, setIsMenuChildren] = useState(false);
   const [iconVisible, handleIconVisible] = useState(false);
@@ -47,25 +66,6 @@ const AllForm = (props) => {
     onClose: handleModalVisible,
     formModalVisible,
   } = props;
-
-  const genTreeNode = (dataList) => {
-    let data = [];
-
-    if (dataList.length != null) {
-      dataList.map((item) => {
-        data.push({
-          key: item.value,
-          pId: item.pid,
-          value: item.value,
-          title: item.title,
-          isLeaf: !(item.pid == '0'),
-          children: item.children != null ? genTreeNode(item.children) : [],
-        });
-      });
-    }
-
-    return data;
-  };
 
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
@@ -105,7 +105,7 @@ const AllForm = (props) => {
         >
           <Input placeholder="请输入" />
         </FormItem>
-        {isMenuChildren || formVals.type == 2 ? (
+        {isMenuChildren || formVals.type === 2 ? (
           <FormItem name="pid" label="上级菜单">
             <TreeSelect
               treeDataSimpleMode

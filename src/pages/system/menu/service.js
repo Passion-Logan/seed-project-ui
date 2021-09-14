@@ -16,7 +16,7 @@ export async function removeMenu(params) {
 }
 
 export async function deleteMenu(id) {
-  return request('/api/sys/menu/deleteMenu?id=' + id, {
+  return request(`/api/sys/menu/deleteMenu?id=${id}`, {
     method: 'DELETE'
   });
 }

@@ -81,7 +81,7 @@ const Login = (props) => {
             <Col span={8}>
               <img
                 src={imgData === undefined ? onGetVerification() : imgData}
-                style={{ width: '115px', height: '40px', display: 'block' }}
+                style={{ width: '116px', height: '40px', display: 'block' }}
                 alt="验证码"
                 onClick={() => {
                   onGetVerification();

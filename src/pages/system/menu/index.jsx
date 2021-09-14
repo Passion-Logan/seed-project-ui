@@ -1,6 +1,6 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useRef } from 'react';
-import { Button, Divider, message, Space, Tag } from 'antd';
+import { Button, Divider, message, Tag } from 'antd';
 import styles from './index.less';
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
@@ -15,12 +15,13 @@ import Icons from './components/Icon';
  */
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
+  const temp = { ...fields };
 
   try {
-    if (fields.type == 1) {
-      fields.pid = '0';
+    if (fields.type === 1) {
+      temp.pid = '0';
     }
-    await addMenu({ ...fields });
+    await addMenu({ ...temp });
     hide();
     message.success('添加成功');
     return true;
@@ -36,12 +37,13 @@ const handleAdd = async (fields) => {
  */
 const handleUpdate = async (fields) => {
   const hide = message.loading('正在修改');
+  const temp = { ...fields };
 
   try {
-    if (fields.type == 1) {
-      fields.pid = '0';
+    if (fields.type === 1) {
+      temp.pid = '0';
     }
-    await updateMenu({ ...fields });
+    await updateMenu({ ...temp });
     hide();
     message.success('修改成功');
     return true;
@@ -168,7 +170,6 @@ const Menu = () => {
           <a
             onClick={async () => {
               const success = await handleRemoveById(record.id);
-              console.log(success);
               if (success) {
                 actionRef.current.reload();
               }
@@ -187,8 +188,9 @@ const Menu = () => {
         search={false}
         actionRef={actionRef}
         rowKey={(row) => row.id}
-        toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
+        toolBarRender={(action, { selectedRowKeys }) => [
           <Button
+            key="button"
             type="primary"
             onClick={() => {
               handleModalVisible(true);
