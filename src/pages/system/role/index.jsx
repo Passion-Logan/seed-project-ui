@@ -1,6 +1,6 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useRef, useState } from 'react';
-import { Button, Divider, message, Spin, Tag } from 'antd';
+import { Button, Divider, message } from 'antd';
 import styles from './index.less';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
@@ -57,7 +57,6 @@ const handleRemove = async (selectedRowKeys) => {
 
 const handleRolePermission = async (value) => {
   const hide = message.loading('正在修改权限');
-  console.log(value);
 
   try {
     await updateRolePermission({ ...value });
@@ -136,11 +135,11 @@ const Role = () => {
           <TableDropdown
             key="actionGroup"
             onSelect={(key) => {
-              if (key == 'authority') {
+              if (key === 'authority') {
                 handleUpdateAuthModal(true);
                 setRoleMenuValues({ id: row.id });
               }
-              if (key == 'delete') {
+              if (key === 'delete') {
                 handleRemove(row.id);
                 action.current.reload();
               }
@@ -161,7 +160,7 @@ const Role = () => {
         actionRef={actionRef}
         rowKey={(row) => row.id}
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
+          <Button key="add" type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
