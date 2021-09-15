@@ -6,3 +6,10 @@ export async function getLogList(params) {
     data: { ...params },
   });
 }
+
+export async function getLoginLogList(params) {
+  return request('/api/sys/log/getPageLoginList', {
+    method: 'POST',
+    data: { ...params },
+  });
+}
