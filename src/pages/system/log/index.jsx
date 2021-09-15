@@ -1,15 +1,11 @@
 import { PageHeaderWrapper } from "@ant-design/pro-layout";
 import ProTable from "@ant-design/pro-table";
-import { Tabs, Tag } from "antd";
+import { Badge, Tabs, Tag } from "antd";
 import React, { useRef } from 'react';
 import styles from './index.less';
 import { getLoginLogList, getLogList } from "./service";
 
 const { TabPane } = Tabs;
-
-const callback = (key) => {
-  console.log(key);
-}
 
 const Log = () => {
 
@@ -115,7 +111,7 @@ const Log = () => {
 
   return (
     <PageHeaderWrapper className={styles.main}>
-      <Tabs defaultActiveKey="1" onChange={callback}>
+      <Tabs defaultActiveKey="1">
         <TabPane tab="登录日志" key="1">
           <ProTable actionRef={actionRef} rowKey={(row) => row.id}
             columns={loginColumns}
@@ -136,6 +132,9 @@ const Log = () => {
             }}
             request={(params, sorter, filter) => getLogList({ ...params, sorter, filter })}
             rowSelection={false}
+            expandable={{
+              expandedRowRender: record =>  <p style={{marginLeft: 20}}><Badge status="processing"/>请求参数:{record.requestParam}</p>,
+            }}
           />
         </TabPane>
       </Tabs>
