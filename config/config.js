@@ -122,6 +122,17 @@ export default defineConfig({
               ],
             },
             {
+              name: 'account',
+              path: '/account',
+              routes: [
+                {
+                  path: '/account/settings',
+                  name: '个人设置',
+                  component: './user/setting',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],

@@ -5,7 +5,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from './index.less';
 import { queryUser, addUser, updateUser, removeUser, updatePassword } from './service';
-import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import Modal from 'antd/lib/modal/Modal';
 
@@ -20,22 +19,23 @@ const handleUpdate = async (fields) => {
     msg = '修改';
     flag = false;
   }
-  const hide = message.loading('正在' + msg);
+  const hide = message.loading(`正在${msg}`);
+  const temp = { ...fields }
 
-  if (fields.roleIds.length != 0) {
-    fields.roleIds = fields.roleIds.join(',');
+  if (fields.roleIds.length !== 0) {
+    temp.roleIds = fields.roleIds.join(',');
   } else {
-    fields.roleIds = null;
+    temp.roleIds = null;
   }
 
   try {
     if (flag) {
-      await addUser({ ...fields });
+      await addUser({ ...temp });
     } else {
-      await updateUser({ ...fields });
+      await updateUser({ ...temp });
     }
     hide();
-    message.success(msg + '成功');
+    message.success(`${msg}成功`);
     return true;
   } catch (error) {
     hide();
@@ -209,6 +209,7 @@ const User = () => {
         rowKey={(row) => row.id}
         toolBarRender={(action, { selectedRowKeys, selectedRows }) => [
           <Button
+            key="addBtn"
             type="primary"
             onClick={() => {
               handleUpdateModalVisible(true);

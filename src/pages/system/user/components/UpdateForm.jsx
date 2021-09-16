@@ -104,8 +104,8 @@ const UpdateForm = (props) => {
               width: '100%',
             }}
           >
-            <Option value="1">男</Option>
-            <Option value="2">女</Option>
+            <Option value={1}>男</Option>
+            <Option value={2}>女</Option>
           </Select>
         </FormItem>
         <FormItem name="email" label="邮箱">
@@ -143,7 +143,7 @@ const UpdateForm = (props) => {
 
     const getChildren = async () => {
       const childrenData = await getAllRole();
-      let result = [];
+      const result = [];
 
       if (childrenData.success) {
         childrenData.data.map((item) => {
@@ -152,6 +152,7 @@ const UpdateForm = (props) => {
               {item.roleName}
             </Option>,
           );
+          return item;
         });
       }
       setChildren(result);
