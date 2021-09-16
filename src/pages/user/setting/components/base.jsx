@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Input, Upload, message, Form, DatePicker, Radio } from 'antd';
+import { Button, Input, Upload, message, Form, DatePicker, Radio, Tag } from 'antd';
 // import ProForm, {
 //   ProFormDependency,
 //   ProFormFieldSet,
@@ -12,6 +12,7 @@ import { useRequest } from 'umi';
 import { getUserInfo, queryCurrent } from '../service';
 import { queryProvince, queryCity } from '../service';
 import styles from './BaseView.less';
+import moment from 'moment';
 
 const validatorPhone = (rule, value, callback) => {
   const values = value.split('-');
@@ -50,7 +51,6 @@ const BaseView = () => {
   });
 
   const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState('vertical');
 
   const getAvatarURL = () => {
     if (currentUser) {
@@ -69,31 +69,21 @@ const BaseView = () => {
     message.success('更新基本信息成功');
   };
 
-  const onFormLayoutChange = ({ layout }) => {
-    setFormLayout(layout);
+  const formItemLayout = {
+    labelCol: {
+      span: 4,
+    },
+    wrapperCol: {
+      span: 14,
+    },
   };
 
-  const formItemLayout =
-    formLayout === 'vertical'
-      ? {
-        labelCol: {
-          span: 4,
-        },
-        wrapperCol: {
-          span: 14,
-        },
-      }
-      : null;
-
-  const buttonItemLayout =
-    formLayout === 'vertical'
-      ? {
-        wrapperCol: {
-          span: 14,
-          offset: 4,
-        },
-      }
-      : null;
+  const buttonItemLayout = {
+    wrapperCol: {
+      span: 14,
+      offset: 4,
+    },
+  };
 
   return (
     <div className={styles.baseView}>
@@ -101,11 +91,10 @@ const BaseView = () => {
         <>
           <div className={styles.left}>
             <Form
-              layout={formLayout}
+              layout='vertical'
               form={form}
               // initialValues={{ layout: formLayout }}
-              initialValues={{ ...currentUser }}
-              onValuesChange={onFormLayoutChange}
+              initialValues={{ ...currentUser, birthday: moment(currentUser.birthday) }}
             >
               <Form.Item name="id" label="ID" hidden>
                 <Input disabled />
@@ -131,8 +120,9 @@ const BaseView = () => {
                   <Radio value={2}>女</Radio>
                 </Radio.Group>
               </Form.Item>
-              <Form.Item name="roles" label="角色信息">
-                <Input placeholder="请输入手机号码" />
+              <Form.Item label="角色信息">
+                <Tag>{currentUser.roles}</Tag>
+                {/* <Input placeholder="请输入手机号码" /> */}
               </Form.Item>
             </Form>
           </div>
