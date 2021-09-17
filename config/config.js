@@ -119,19 +119,24 @@ export default defineConfig({
                   name: 'system-log',
                   component: './system/log',
                 },
-              ],
-            },
-            {
-              name: 'account',
-              path: '/account',
-              routes: [
                 {
-                  path: '/account/settings',
-                  name: '个人设置',
+                  path: '/system/settings',
+                  name: 'system-setting',
                   component: './user/setting',
                 },
               ],
             },
+            // {
+            //   name: 'account',
+            //   path: '/account',
+            //   routes: [
+            //     {
+            //       path: '/account/settings',
+            //       name: '个人设置',
+            //       component: './user/setting',
+            //     },
+            //   ],
+            // },
             {
               component: './404',
             },

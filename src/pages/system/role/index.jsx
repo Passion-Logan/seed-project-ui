@@ -13,10 +13,13 @@ const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
-    await addRole({ ...fields });
+    const req = await addRole({ ...fields });
     hide();
-    message.success('添加成功');
-    return true;
+    if (req.code === 200) {
+      message.success('添加成功');
+      return true;
+    }
+    return false;
   } catch (error) {
     hide();
     return false;

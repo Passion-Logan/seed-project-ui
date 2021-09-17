@@ -21,10 +21,8 @@ class AvatarDropdown extends React.Component {
       return;
     }
 
-
     if (key === 'settings') {
-      console.log(123);
-      history.push(`/account/settings`);
+      history.push(`/system/settings`);
       return;
     }
 

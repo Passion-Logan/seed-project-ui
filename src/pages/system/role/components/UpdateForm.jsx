@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Select, Input, Radio } from 'antd';
+import { Form, Button, Modal, Input } from 'antd';
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const RadioGroup = Radio.Group;
 
 const formLayout = {
   labelCol: {

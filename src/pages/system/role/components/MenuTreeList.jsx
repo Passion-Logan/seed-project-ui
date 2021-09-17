@@ -23,7 +23,7 @@ const TreeMenuList = (props) => {
   });
 
   const genTreeNode = (dataList) => {
-    let data = [];
+    const data = [];
 
     if (dataList.length != null) {
       dataList.map((item) => {
@@ -42,7 +42,7 @@ const TreeMenuList = (props) => {
   };
 
   const [rolePermission, setRolePermission] = useState(() => {
-    getRolePermission({ roleId: roleId }).then((result) => {
+    getRolePermission({ roleId }).then((result) => {
       if (result.success) {
         setRolePermission(result.data);
       }
@@ -54,14 +54,11 @@ const TreeMenuList = (props) => {
   };
 
   const onSelect = (checkedKeys, info) => {
-    console.log('onSelect ', rolePermission);
-
-    console.log('treeData ', treeData);
   };
 
   const onCheck = (checkedKeys, info) => {
     setRolePermission(checkedKeys.checked)
-    setUpdateValue({ roleId: roleId, permissionIds: checkedKeys.checked.join(',') });
+    setUpdateValue({ roleId, permissionIds: checkedKeys.checked.join(',') });
   };
 
   const renderFooter = () => {

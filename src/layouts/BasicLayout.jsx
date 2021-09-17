@@ -4,16 +4,15 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 // import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import ProLayout, { PageContainer, MenuDataItem } from '@ant-design/pro-layout';
+import ProLayout from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import { Link, useIntl, connect } from 'umi';
 // import { GithubOutlined } from '@ant-design/icons';
-import { Result, Button, Menu } from 'antd';
+import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
-import { createFromIconfontCN } from '@ant-design/icons';
 import iconEnum from './IconEnum';
 import { isUndefined } from 'lodash';
 
@@ -110,6 +109,7 @@ const BasicLayout = (props) => {
     if (!isUndefined(menuList)) {
       return mappingIcon(menuList);
     }
+    return "";
   };
 
   const handleMenuCollapse = (payload) => {

@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Input, Upload, message, Form, DatePicker, Radio, Tag } from 'antd';
-// import ProForm, {
-//   ProFormDependency,
-//   ProFormFieldSet,
-//   ProFormSelect,
-//   ProFormText,
-//   ProFormTextArea,
-// } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
-import { getUserInfo, queryCurrent } from '../service';
-import { queryProvince, queryCity } from '../service';
+import { getUserInfo, updateUserInfo, uploadAvatar } from '../service';
 import styles from './BaseView.less';
 import moment from 'moment';
+import { isNull } from 'underscore';
 
 const validatorPhone = (rule, value, callback) => {
   const values = value.split('-');
@@ -28,13 +21,28 @@ const validatorPhone = (rule, value, callback) => {
   callback();
 }; // 头像组件 方便以后独立，增加裁剪之类的功能
 
+
+const uploadFunction = async (file) => {
+  const test = new FormData()
+  test.append('test', '123')
+  const req = await uploadAvatar(file);
+  if (req.code === 200) {
+    message.success('上传成功');
+  }
+};
+
+const acatarConfig = {
+  accept: "image/jpeg, image/png",
+}
+
 const AvatarView = ({ avatar }) => (
   <>
     <div className={styles.avatar_title}>头像</div>
     <div className={styles.avatar}>
       <img src={avatar} alt="avatar" />
     </div>
-    <Upload showUploadList={false}>
+    {/* 待完善头像上传组件 */}
+    <Upload showUploadList={false} {...acatarConfig} action="/api/auth/user/uploadAvatar">
       <div className={styles.button_view}>
         <Button>
           <UploadOutlined />
@@ -66,24 +74,28 @@ const BaseView = () => {
   };
 
   const handleFinish = async () => {
-    message.success('更新基本信息成功');
+    const values = form.getFieldsValue();
+    const params = { ...values, birthday: isNull(values.birthday) ? null : values.birthday.format('YYYY-MM-DD HH:mm:ss'), }
+
+    const hide = message.loading('正在修改');
+    try {
+      const req = await updateUserInfo(params);
+      hide();
+      if (req.code === 200) {
+        message.success('更新基本信息成功');
+      }
+    } catch (error) {
+      hide();
+    }
   };
 
-  const formItemLayout = {
-    labelCol: {
-      span: 4,
-    },
-    wrapperCol: {
-      span: 14,
-    },
-  };
-
-  const buttonItemLayout = {
-    wrapperCol: {
-      span: 14,
-      offset: 4,
-    },
-  };
+  const mapTag = (roles) => {
+    const tags = []
+    for (let i = 0; i < roles.length; i += 1) {
+      tags.push(<Tag key={`tag + ${i}`} color="#87d068">{roles[i]}</Tag>)
+    }
+    return tags;
+  }
 
   return (
     <div className={styles.baseView}>
@@ -93,8 +105,8 @@ const BaseView = () => {
             <Form
               layout='vertical'
               form={form}
-              // initialValues={{ layout: formLayout }}
-              initialValues={{ ...currentUser, birthday: moment(currentUser.birthday) }}
+              onFinish={handleFinish}
+              initialValues={{ ...currentUser, birthday: isNull(currentUser.birthday) ? null : moment(currentUser.birthday) }}
             >
               <Form.Item name="id" label="ID" hidden>
                 <Input disabled />
@@ -102,7 +114,7 @@ const BaseView = () => {
               <Form.Item name="userName" label="登录账号">
                 <Input disabled />
               </Form.Item>
-              <Form.Item name="nickName" label="用户昵称">
+              <Form.Item name="nickName" label="用户昵称" rules={[{ required: true }]}>
                 <Input placeholder="请输入用户昵称" />
               </Form.Item>
               <Form.Item name="email" label="用户邮箱">
@@ -121,8 +133,12 @@ const BaseView = () => {
                 </Radio.Group>
               </Form.Item>
               <Form.Item label="角色信息">
-                <Tag>{currentUser.roles}</Tag>
-                {/* <Input placeholder="请输入手机号码" /> */}
+                {mapTag(currentUser.roles)}
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  提交
+                </Button>
               </Form.Item>
             </Form>
           </div>
