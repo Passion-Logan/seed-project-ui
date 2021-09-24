@@ -45,8 +45,8 @@ const SecurityView = () => {
       title: '账户密码',
       description: (
         <>
-          当前密码:<Input.Password placeholder="请输入当前密码" onChange={(e) => changePwd(e.target.value, 1)} style={{ width: 150, marginLeft: 10, marginRight: 10 }} size='small' />
-          新密码:<Input.Password placeholder="请输入新密码" onChange={(e) => changePwd(e.target.value, 2)} style={{ width: 150 }} size='small' />
+          当前密码:<Input.Password placeholder="请输入当前密码" onChange={(e) => changePwd(e.target.value, 1)} style={{ width: 150, marginLeft: 10, marginRight: 20 }} size='small' />
+          新密码:<Input.Password placeholder="请输入新密码" onChange={(e) => changePwd(e.target.value, 2)} style={{ width: 150, marginLeft: 10 }} size='small' />
         </>
       ),
       actions: [<a key="Modify" href="###" onClick={submitChange}>修改</a>],

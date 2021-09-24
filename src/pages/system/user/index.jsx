@@ -95,7 +95,6 @@ const User = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [updatePwdVisible, handleUpdatePwdVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const [setPwdValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
@@ -186,8 +185,8 @@ const User = () => {
           <Divider type="vertical" />
           <a
             onClick={() => {
+              form.resetFields()
               handleUpdatePwdVisible(true);
-              setPwdValues(record);
               form.setFieldsValue({
                 userName: record.userName,
               });
