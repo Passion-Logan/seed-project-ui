@@ -213,7 +213,7 @@ const User = () => {
             type="primary"
             onClick={() => {
               handleUpdateModalVisible(true);
-              setStepFormValues({ id: null, sex: '1', enabled: 'true' });
+              setStepFormValues({ id: null, sex: 1, enabled: 'true' });
             }}
           >
             <PlusOutlined /> 新建

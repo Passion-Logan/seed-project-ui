@@ -1,43 +1,55 @@
-import React from 'react';
-import { List } from 'antd';
-
-const passwordStrength = {
-  strong: <span className="strong">强</span>,
-  medium: <span className="medium">中</span>,
-  weak: <span className="weak">弱 Weak</span>,
-};
+import React, { useState } from 'react';
+import { Input, List, message } from 'antd';
+import { updatePwd } from '../service';
+import { clearToken } from '@/utils/token';
 
 const SecurityView = () => {
+  const [oldPwd, setOldPwd] = useState('');
+  const [newPwd, setNewPwd] = useState('');
+
+  const changePwd = (pwd, type) => {
+    if (type === 1) {
+      setOldPwd(pwd)
+    } else {
+      setNewPwd(pwd)
+    }
+  }
+
+  const submitChange = async () => {
+    if (!oldPwd || !newPwd) {
+      message.error('密码不能为空')
+      return;
+    }
+    if (oldPwd === newPwd) {
+      message.error('新旧密码不能相同')
+      return;
+    }
+
+    const params = {
+      oldPwd,
+      newPwd
+    }
+
+    const rep = await updatePwd(JSON.stringify(params));
+    if (rep.code === 200) {
+      message.success(rep.message)
+      clearToken()
+      setTimeout(() => {
+        window.location.replace('/login')
+      }, 1000)
+    }
+  }
+
   const getData = () => [
     {
       title: '账户密码',
       description: (
         <>
-          当前密码强度：
-          {passwordStrength.strong}
+          当前密码:<Input.Password placeholder="请输入当前密码" onChange={(e) => changePwd(e.target.value, 1)} style={{ width: 150, marginLeft: 10, marginRight: 10 }} size='small' />
+          新密码:<Input.Password placeholder="请输入新密码" onChange={(e) => changePwd(e.target.value, 2)} style={{ width: 150 }} size='small' />
         </>
       ),
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: '密保手机',
-      description: `已绑定手机：138****8293`,
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: '密保问题',
-      description: '未设置密保问题，密保问题可有效保护账户安全',
-      actions: [<a key="Set">设置</a>],
-    },
-    {
-      title: '备用邮箱',
-      description: `已绑定邮箱：ant***sign.com`,
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: 'MFA 设备',
-      description: '未绑定 MFA 设备，绑定后，可以进行二次确认',
-      actions: [<a key="bind">绑定</a>],
+      actions: [<a key="Modify" href="###" onClick={submitChange}>修改</a>],
     },
   ];
 

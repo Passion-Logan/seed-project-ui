@@ -5,7 +5,6 @@ import { useRequest } from 'umi';
 import { getUserInfo, updateUserInfo } from '../service';
 import styles from './BaseView.less';
 import moment from 'moment';
-import { isNull } from 'underscore';
 import { getToken } from '@/utils/token';
 
 const handleChange = (data) => {
@@ -83,7 +82,7 @@ const BaseView = () => {
 
   const handleFinish = async () => {
     const values = form.getFieldsValue();
-    const params = { ...values, birthday: isNull(values.birthday) ? null : values.birthday.format('YYYY-MM-DD HH:mm:ss'), }
+    const params = { ...values, birthday: values.birthday === null || values.birthday === '' ? null : values.birthday.format('YYYY-MM-DD HH:mm:ss'), }
 
     const hide = message.loading('正在修改');
     try {
@@ -96,8 +95,6 @@ const BaseView = () => {
       hide();
     }
   };
-
-
 
   const mapTag = (roles) => {
     const tags = []
@@ -116,7 +113,7 @@ const BaseView = () => {
               layout='vertical'
               form={form}
               onFinish={handleFinish}
-              initialValues={{ ...currentUser, birthday: isNull(currentUser.birthday) ? null : moment(currentUser.birthday) }}
+              initialValues={{ ...currentUser, birthday: currentUser.birthday === null || currentUser.birthday === '' ? null : moment(currentUser.birthday) }}
             >
               <Form.Item name="id" label="ID" hidden>
                 <Input disabled />
