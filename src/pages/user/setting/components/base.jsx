@@ -2,56 +2,64 @@ import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Input, Upload, message, Form, DatePicker, Radio, Tag } from 'antd';
 import { useRequest } from 'umi';
-import { getUserInfo, updateUserInfo, uploadAvatar } from '../service';
+import { getUserInfo, updateUserInfo } from '../service';
 import styles from './BaseView.less';
 import moment from 'moment';
 import { isNull } from 'underscore';
+import { getToken } from '@/utils/token';
 
-const validatorPhone = (rule, value, callback) => {
-  const values = value.split('-');
-
-  if (!values[0]) {
-    callback('Please input your area code!');
+const handleChange = (data) => {
+  if (data.file.status === 'done') {
+    const rep = data.file.response
+    if (rep.success) {
+      return rep.message;
+    }
   }
-
-  if (!values[1]) {
-    callback('Please input your phone number!');
-  }
-
-  callback();
-}; // 头像组件 方便以后独立，增加裁剪之类的功能
-
-
-const uploadFunction = async (file) => {
-  const test = new FormData()
-  test.append('test', '123')
-  const req = await uploadAvatar(file);
-  if (req.code === 200) {
-    message.success('上传成功');
-  }
-};
+  return "";
+}
 
 const acatarConfig = {
   accept: "image/jpeg, image/png",
 }
 
-const AvatarView = ({ avatar }) => (
-  <>
-    <div className={styles.avatar_title}>头像</div>
-    <div className={styles.avatar}>
-      <img src={avatar} alt="avatar" />
-    </div>
-    {/* 待完善头像上传组件 */}
-    <Upload showUploadList={false} {...acatarConfig} action="/api/auth/user/uploadAvatar">
-      <div className={styles.button_view}>
-        <Button>
-          <UploadOutlined />
-          更换头像
-        </Button>
+const otherHeader = {
+  token: getToken()
+}
+
+const date = new Date();
+const fileBiz = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`
+const otherParams = {
+  biz: fileBiz
+}
+
+const AvatarView = (props) => {
+  const { avatar, updateHead } = props
+
+  const [avatarUri, setAvatarUri] = useState(avatar);
+
+  return (
+    <>
+      <div className={styles.avatar_title}>头像</div>
+      <div className={styles.avatar}>
+        <img src={avatarUri} alt="avatar" />
       </div>
-    </Upload>
-  </>
-);
+      <Upload showUploadList={false} {...acatarConfig} onChange={(file) => {
+        const newUri = handleChange(file);
+        if (newUri !== "") {
+          setAvatarUri(newUri);
+          updateHead(newUri);
+        }
+      }} headers={otherHeader} data={otherParams} action="/api/auth/user/uploadAvatar">
+        <div className={styles.button_view}>
+          <Button>
+            <UploadOutlined />
+            更换头像
+          </Button>
+        </div>
+      </Upload>
+    </>
+  )
+};
 
 const BaseView = () => {
   const { data: currentUser, loading } = useRequest(() => {
@@ -88,6 +96,8 @@ const BaseView = () => {
       hide();
     }
   };
+
+
 
   const mapTag = (roles) => {
     const tags = []
@@ -135,6 +145,9 @@ const BaseView = () => {
               <Form.Item label="角色信息">
                 {mapTag(currentUser.roles)}
               </Form.Item>
+              <Form.Item name="avatar" label="头像" hidden>
+                <Input disabled />
+              </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   提交
@@ -144,7 +157,11 @@ const BaseView = () => {
           </div>
 
           <div className={styles.right}>
-            <AvatarView avatar={getAvatarURL()} />
+            <AvatarView avatar={getAvatarURL()} updateHead={(uri) => {
+              form.setFieldsValue({
+                avatar: uri
+              })
+            }} />
           </div>
         </>
       )

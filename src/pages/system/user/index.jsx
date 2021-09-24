@@ -95,7 +95,7 @@ const User = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [updatePwdVisible, handleUpdatePwdVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const [pwdValues, setPwdValues] = useState({});
+  const [setPwdValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
